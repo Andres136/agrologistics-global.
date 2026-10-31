@@ -1,0 +1,2988 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informe Técnico Interactivo - AgroLogistics Global</title>
+  <style>
+    /* ==========================================
+       VARIABLES Y PALETA DE COLORES EJECUTIVA
+       ========================================== */
+    :root {
+      --bg-main: #0C0C0D;
+      --bg-card: #171719;
+      --bg-sidebar: #0C0C0D;
+      --text-main: #FAFAFA;
+      --text-muted: #B8B8BE;
+      --text-white: #FAFAFA;
+      
+      --primary: #0C0C0D;
+      --primary-light: #202023;
+      --accent-teal: #FF8A32;
+      --accent-teal-hover: #FFA45C;
+      --accent-emerald: #FFAB66;
+      --accent-amber: #FFB454;
+      --accent-rose: #FF7373;
+      
+      --border-color: #303034;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 30px -4px rgba(0, 0, 0, 0.08);
+      
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --font-family: "Segoe UI Variable Text", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --bg-main: #080809;
+      --bg-card: #151517;
+      --bg-sidebar: #080809;
+      --text-main: #FAFAFA;
+      --text-muted: #C4C4CA;
+      --text-white: #FFFFFF;
+      
+      --primary: #202023;
+      --primary-light: #252527;
+      --accent-teal: #FF8A32;
+      --accent-teal-hover: #FFAD70;
+      --accent-emerald: #FFAB66;
+      
+      --border-color: #202023;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 10px 30px -4px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Reset & Generales */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ==========================================
+       SIDEBAR / NAVEGACIÓN PROFESIONAL
+       ========================================== */
+    .sidebar {
+      width: 280px;
+      background-color: var(--bg-sidebar);
+      color: var(--text-white);
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 4px 0 25px rgba(0,0,0,0.1);
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sidebar-brand {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-brand span {
+      background: linear-gradient(135deg, var(--accent-teal), var(--accent-emerald));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sidebar-subtitle {
+      font-size: 0.75rem;
+      color: #C4C4CA;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .sidebar-nav {
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      color: #C4C4CA;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+    }
+
+    .nav-item:hover, .nav-item.active {
+      color: #FFFFFF;
+      background-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(90deg, rgba(255, 138, 50, 0.2), transparent);
+      border-left: 3px solid var(--accent-teal);
+      color: #FFFFFF;
+    }
+
+    .nav-item-num {
+      font-size: 0.75rem;
+      font-weight: 700;
+      opacity: 0.6;
+      width: 20px;
+    }
+
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* ==========================================
+       MAIN CONTENT CONTAINER
+       ========================================== */
+    .main-wrapper {
+      margin-left: 280px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      width: calc(100% - 280px);
+    }
+
+    /* Top Navigation Header */
+    .top-header {
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-toggle-btn:hover {
+      border-color: var(--accent-teal);
+      color: var(--accent-teal);
+    }
+
+    /* Content Area */
+    .content-area {
+      padding: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Section Component Structure */
+    .section-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 36px;
+      margin-bottom: 40px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .section-header {
+      margin-bottom: 28px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-title-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-teal);
+      margin-bottom: 4px;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    /* Hero Banner / Cover Section */
+    .hero-section {
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+      color: #FFFFFF;
+      border-radius: var(--radius-lg);
+      padding: 48px;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255, 138, 50, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255, 138, 50, 0.2);
+      border: 1px solid rgba(255, 138, 50, 0.4);
+      color: #FFAD70;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-title {
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 16px;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: #C4C4CA;
+      max-width: 750px;
+      margin-bottom: 32px;
+    }
+
+    .hero-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 24px;
+    }
+
+    .hero-meta-item h4 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #C4C4CA;
+      margin-bottom: 4px;
+    }
+
+    .hero-meta-item p {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #FAFAFA;
+    }
+
+    /* ==========================================
+       INTERACTIVE COMPONENTS
+       ========================================== */
+
+    /* Matriz de Riesgos */
+    .risk-matrix-grid {
+      display: grid;
+      grid-template-columns: 80px repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .matrix-cell {
+      padding: 20px;
+      border-radius: var(--radius-sm);
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .matrix-cell:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .cell-high { background-color: rgba(255, 115, 115, 0.1); border-color: rgba(255, 115, 115, 0.3); color: var(--text-main); }
+    .cell-medium { background-color: rgba(255, 180, 84, 0.1); border-color: rgba(255, 180, 84, 0.3); color: var(--text-main); }
+    .cell-low { background-color: rgba(255, 138, 50, 0.1); border-color: rgba(255, 138, 50, 0.3); color: var(--text-main); }
+
+    .matrix-cell-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .matrix-cell-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      width: fit-content;
+    }
+
+    .matrix-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .risk-detail-box {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: var(--bg-main);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      display: none;
+    }
+
+    .risk-detail-box.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* Acordeón / Pestañas Teóricas */
+    .theory-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      color: var(--accent-teal);
+      border-bottom-color: var(--accent-teal);
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Topología SVG Interactiva */
+    .topology-container {
+      background-color: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .node-element {
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .node-element:hover rect, .node-element:hover circle {
+      stroke: var(--accent-teal);
+      stroke-width: 3px;
+      filter: drop-shadow(0 4px 8px rgba(255, 138, 50, 0.3));
+    }
+
+    /* Modal / Side Sheet para Nodos SVG */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      max-width: 500px;
+      width: 90%;
+      padding: 28px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    /* Simulador QoS */
+    .qos-simulator {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      background-color: var(--bg-main);
+      padding: 28px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .sim-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .sim-slider {
+      width: 100%;
+      accent-color: var(--accent-teal);
+    }
+
+    .sim-results {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      text-align: center;
+    }
+
+    .mos-score-badge {
+      font-size: 3rem;
+      font-weight: 800;
+      margin: 12px 0;
+      line-height: 1;
+    }
+
+    .mos-status-indicator {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+
+    /* Flip Cards 3D para Seguridad */
+    .flip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .flip-card {
+      background-color: transparent;
+      height: 220px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: left;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      border-radius: var(--radius-md);
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .flip-card-front {
+      background-color: var(--bg-card);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .flip-card-back {
+      background-color: var(--primary);
+      color: #FFFFFF;
+      transform: rotateY(180deg);
+    }
+
+    .card-hint {
+      font-size: 0.75rem;
+      color: var(--accent-teal);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Tabla Comparativa */
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+    }
+
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .custom-table th {
+      background-color: var(--bg-main);
+      padding: 16px;
+      font-weight: 700;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .custom-table td {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .custom-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .filter-btn-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .filter-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .filter-btn.active {
+      background: var(--accent-teal);
+      color: #FFFFFF;
+      border-color: var(--accent-teal);
+    }
+
+    /* Mini Quiz */
+    .quiz-container {
+      background-color: var(--bg-main);
+      border-radius: var(--radius-md);
+      padding: 28px;
+      border: 1px solid var(--border-color);
+    }
+
+    .quiz-option {
+      display: block;
+      padding: 14px 18px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .quiz-option:hover {
+      border-color: var(--accent-teal);
+    }
+
+    .quiz-option.correct {
+      background-color: rgba(255, 171, 102, 0.15);
+      border-color: var(--accent-emerald);
+      color: var(--accent-emerald);
+      font-weight: 700;
+    }
+
+    .quiz-option.incorrect {
+      background-color: rgba(255, 115, 115, 0.15);
+      border-color: var(--accent-rose);
+      color: var(--accent-rose);
+    }
+
+    .quiz-feedback {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      display: none;
+    }
+
+    /* Referencias APA */
+    .apa-list {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    .apa-list li {
+      padding-left: 24px;
+      text-indent: -24px;
+      margin-bottom: 12px;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Mobile Responsive Header & Nav Toggle */
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-main);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .main-wrapper {
+        margin-left: 0;
+        width: 100%;
+      }
+      .mobile-menu-toggle {
+        display: block;
+      }
+      .qos-simulator {
+        grid-template-columns: 1fr;
+      }
+      .content-area {
+        padding: 20px;
+      }
+      .hero-section {
+        padding: 28px;
+      }
+      .hero-title {
+        font-size: 1.6rem;
+      }
+    }
+  
+    html { scroll-behavior: smooth; }
+    section { scroll-margin-top: 84px; }
+    :focus-visible { outline: 3px solid var(--accent-teal); outline-offset: 4px; }
+    .hero-meta-item { min-width: 0; overflow-wrap: anywhere; }
+    .theory-tabs, .filter-btn-group { flex-wrap: wrap; }
+    .skip-link { position: fixed; top: -100px; left: 12px; z-index: 200; padding: 12px; background: var(--bg-card); color: var(--text-main); }
+    .skip-link:focus { top: 12px; }
+    .menu-backdrop { display: none; }
+    @media(max-width: 900px) {
+      .menu-backdrop.visible { display: block; position: fixed; inset: 0; background: #0008; z-index: 95; }
+    }
+    @media(max-width: 600px) {
+      .top-header { padding: 8px 16px; gap: 10px; height: auto; min-height: 64px; }
+      .header-title { font-size: .72rem; flex: 1; }
+      .theme-toggle-btn { padding: 8px; font-size: .72rem; flex-shrink: 0; }
+      .section-card { padding: 20px; margin-bottom: 24px; }
+      .hero-meta-grid { grid-template-columns: 1fr; }
+      .risk-matrix-grid { grid-template-columns: 48px repeat(3, minmax(0, 1fr)); gap: 4px; }
+      .matrix-cell { padding: 8px 4px; min-width: 0; overflow-wrap: anywhere; }
+      .matrix-cell-title, .matrix-label { font-size: .65rem; }
+      .matrix-cell-badge { font-size: .6rem; }
+      .flip-grid { grid-template-columns: 1fr; }
+      .modal-card { max-height: 85vh; overflow-y: auto; }
+    }
+    @media(prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  
+    /* Identidad visual: negro, naranja y blanco. Tipografía local, sin descargas. */
+    :root { color-scheme: dark; }
+    body { font-size: 16px; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+    button, input { font: inherit; }
+    h1, h2, h3, h4, .sidebar-brand {
+      font-family: "Segoe UI Variable Display", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-weight: 650; letter-spacing: -.025em;
+    }
+    h1, h2, h3 { text-wrap: balance; }
+    p { text-wrap: pretty; }
+    .sidebar { border-right: 1px solid #29292D; }
+    .sidebar-brand span { background: none; -webkit-text-fill-color: #FFFFFF; }
+    .sidebar-brand svg { color: var(--accent-teal); }
+    .sidebar-subtitle { letter-spacing: .12em; font-size: .67rem; }
+    .nav-item { border-left: 3px solid transparent; }
+    .nav-item.active { background: linear-gradient(90deg, #FF8A3222, transparent); }
+    .nav-item.active .nav-item-num { color: #FFAD70; opacity: 1; }
+    .top-header { background: var(--bg-sidebar); }
+    .hero-section {
+      background: radial-gradient(ellipse at 100% 0%, #FF8A321A, transparent 65%), linear-gradient(135deg, #222224, #101011);
+      border: 1px solid #3D3028; border-top: 3px solid #FF8A32;
+      box-shadow: 0 20px 60px #0004;
+    }
+    .hero-title { font-weight: 750; line-height: 1.15; letter-spacing: -.04em; }
+    .hero-subtitle { color: #DEDEE3; line-height: 1.8; }
+    .hero-badge { background: #FF8A3218; border: 1px solid #FF8A3240; color: #FFAD70; letter-spacing: .07em; }
+    .hero-meta-item h4 { color: #FFAD70; letter-spacing: .09em; }
+    .section-card { box-shadow: 0 8px 30px #0002; }
+    .section-title { color: #FAFAFA; font-weight: 700; }
+    .section-title-tag { letter-spacing: .14em; }
+    .section-header { border-bottom-color: #FFFFFF12; }
+    .tab-btn.active, .filter-btn.active { background: #FF8A32; color: #15100C; font-weight: 700; }
+    .sim-slider { accent-color: #FF8A32; }
+    .sim-slider::-webkit-slider-thumb { background: #FF8A32; }
+    .sim-slider::-moz-range-thumb { background: #FF8A32; }
+    .theme-toggle-btn { border-color: #FF8A3240; color: #FFFFFF; }
+    .custom-table th { color: #FFAD70; }
+    .flip-card-back { background: linear-gradient(135deg, #2A211B, #171719); color: #FFFFFF; border: 1px solid #FF8A3255; }
+    .mos-score-badge { font-variant-numeric: tabular-nums; letter-spacing: -.06em; }
+  
+    /* Fondo de telecomunicaciones integrado en este archivo. */
+    body { isolation: isolate; }
+    body::before {
+      content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background-image: none;
+      background-size: 960px 760px; background-position: center top; opacity: .19;
+    }
+    .section-card { background: rgba(23, 23, 25, .91); backdrop-filter: blur(8px); }
+    .nav-item:hover, .nav-item:focus-visible, .nav-item.active {
+      background: #FF8A32; color: #17100A; border-left-color: #FFBB87;
+      box-shadow: 0 4px 18px #FF8A3225;
+    }
+    .nav-item.active .nav-item-num, .nav-item:hover .nav-item-num { color: #17100A; opacity: 1; }
+    .tab-btn:hover, .tab-btn:focus-visible, .filter-btn:hover, .filter-btn:focus-visible {
+      background: #FF8A32; color: #17100A; border-color: #FF8A32;
+    }
+    .matrix-cell[onclick]:hover, .matrix-cell.selected, .quiz-option:hover {
+      background: #FF8A3226; border-color: #FF8A32; box-shadow: 0 0 0 1px #FF8A3266;
+    }
+    .node-element:hover, .node-element:focus-visible { filter: drop-shadow(0 0 8px #FF8A32); }
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg-main: #F5F5F7; --bg-card: #FFFFFF; --bg-sidebar: #FFFFFF;
+      --text-main: #202024; --text-muted: #565660; --text-white: #202024;
+      --primary: #F0ECE8; --primary-light: #FFFFFF; --border-color: #D8D8DF;
+      --accent-teal: #B84A00; --accent-teal-hover: #9C3E00;
+      --accent-emerald: #A64800; --accent-amber: #925900; --accent-rose: #C12F3D;
+    }
+    [data-theme="light"]::before { opacity: .13; }
+    [data-theme="light"] .sidebar { border-color: #D8D8DF; }
+    [data-theme="light"] .sidebar-brand span { -webkit-text-fill-color: #202024; }
+    [data-theme="light"] .sidebar-subtitle,
+    [data-theme="light"] .nav-item { color: #565660; }
+    [data-theme="light"] .nav-item:hover,
+    [data-theme="light"] .nav-item:focus-visible,
+    [data-theme="light"] .nav-item.active { color: #17100A; }
+    [data-theme="light"] .section-card { background: rgba(255, 255, 255, .93); }
+    [data-theme="light"] .section-title,
+    [data-theme="light"] .theme-toggle-btn { color: #202024; }
+    [data-theme="light"] .section-header { border-bottom-color: #20202418; }
+    [data-theme="light"] .hero-section {
+      background: radial-gradient(ellipse at top right, #FF8A321A, transparent 70%), linear-gradient(135deg, #FFFFFF, #F4F0EC);
+      color: #202024; border-color: #FF8A3266;
+    }
+    [data-theme="light"] .hero-title { color: #202024; }
+    [data-theme="light"] .hero-subtitle,
+    [data-theme="light"] .hero-meta-item p { color: #454550 !important; }
+    [data-theme="light"] .hero-badge,
+    [data-theme="light"] .hero-meta-item h4,
+    [data-theme="light"] .custom-table th { color: #A64800; }
+    [data-theme="light"] .flip-card-back { background: #FFF0E4; color: #202024; }
+    [data-theme="light"] .flip-card-back h4 { color: #A64800 !important; }
+  
+    /* La imagen se pinta directamente sobre el fondo, sin capas negativas. */
+    body {
+      background-image: linear-gradient(rgba(8,8,10,.48), rgba(8,8,10,.48)), none;
+      background-size: auto, 1120px auto;
+      background-position: center, center top;
+      background-repeat: repeat;
+      background-attachment: fixed;
+    }
+    body::before { display: none; }
+    .main-wrapper { background: transparent; }
+    .section-card { background: rgba(18,18,21,.82); backdrop-filter: blur(2px); }
+    .hero-section {
+      background: linear-gradient(115deg, rgba(14,14,17,.94), rgba(14,14,17,.66)), none;
+      background-size: cover; background-position: center;
+    }
+    [data-theme="light"] {
+      background-image: linear-gradient(rgba(255,255,255,.68), rgba(255,255,255,.68)), none;
+    }
+    [data-theme="light"] .section-card { background: rgba(255,255,255,.84); }
+    [data-theme="light"] .hero-section {
+      background: linear-gradient(115deg, rgba(255,255,255,.94), rgba(255,255,255,.65)), none;
+      background-size: cover; background-position: center;
+    }
+    @media(max-width:600px) { body { background-size: auto, 760px auto; background-attachment: scroll; } }
+  
+    /* Imagen original generada e incrustada: este HTML funciona sin archivos externos. */
+    :root { --network-image: none; }
+    body, body[data-theme="dark"] {
+      background-color: #070709;
+      background-image: linear-gradient(90deg, rgba(4,4,7,.58), rgba(4,4,7,.25)), var(--network-image);
+      background-size: cover; background-position: center; background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+    body[data-theme="light"] {
+      background-color: #F7F4F0;
+      background-image: linear-gradient(90deg, rgba(255,252,248,.89), rgba(255,252,248,.70)), var(--network-image);
+    }
+    body { font-weight: 500; letter-spacing: .005em; }
+    h1, h2, h3, h4, .section-title, .sidebar-brand,
+    button, .nav-item, .matrix-cell-title, .control-label,
+    .quiz-option, th, .hero-badge, .header-title { font-weight: 800; }
+    .sidebar { background: rgba(7,7,10,.94); backdrop-filter: blur(18px); border-right: 1px solid #FF8A3233; }
+    .sidebar-header { padding-top: 30px; }
+    .sidebar-brand { font-size: 1.3rem; letter-spacing: -.045em; }
+    .sidebar-brand svg { filter: drop-shadow(0 0 7px #FF8A3270); }
+    .nav-item { font-size: .84rem; letter-spacing: .01em; }
+    .top-header { background: rgba(8,8,12,.83); backdrop-filter: blur(16px); border-bottom: 1px solid #FF8A3230; }
+    .content-area { max-width: 1320px; }
+    .hero-section, [data-theme="light"] .hero-section {
+      position: relative; overflow: hidden;
+      background-image: linear-gradient(90deg, rgba(5,5,8,.94) 0%, rgba(5,5,8,.76) 48%, rgba(5,5,8,.22) 100%), var(--network-image);
+      background-size: cover; background-position: center;
+      border: 1px solid #FF8A3260; border-top: 3px solid #FF8A32;
+      box-shadow: 0 22px 65px #0006, 0 0 45px #FF8A3210;
+      padding: clamp(28px, 4vw, 54px); color: #FFF;
+    }
+    .hero-section::before { display: none; }
+    .hero-title, [data-theme="light"] .hero-title {
+      max-width: 820px; font-size: clamp(2rem, 3.65vw, 3.65rem);
+      font-weight: 900; line-height: 1.08; letter-spacing: -.045em;
+      color: #FFFFFF; text-shadow: 0 4px 24px #0009;
+    }
+    .hero-subtitle, [data-theme="light"] .hero-subtitle { color: #ECECF1; max-width: 730px; font-weight: 550; }
+    .hero-badge, [data-theme="light"] .hero-badge {
+      color: #FFB178; background: #0A0806AA; border: 1px solid #FF8A3277;
+      font-size: .7rem; letter-spacing: .12em; padding: 8px 12px; text-transform: uppercase;
+    }
+    .hero-meta-grid { gap: 22px; margin-top: 30px; padding-top: 25px; border-top: 1px solid #FF8A3233; }
+    .hero-meta-item h4, [data-theme="light"] .hero-meta-item h4 { color: #FFAD70; font-size: .7rem; font-weight: 850; }
+    .hero-meta-item p, [data-theme="light"] .hero-meta-item p { color: #FFFFFF !important; font-weight: 650; }
+    .section-card { background: rgba(10,11,16,.77); backdrop-filter: blur(12px); border: 1px solid #FFFFFF24; border-top-color: #FF8A3255; box-shadow: 0 12px 38px #0004; }
+    .section-title { font-size: clamp(1.35rem, 2vw, 1.85rem); letter-spacing: -.035em; }
+    .section-title-tag { font-weight: 850; font-size: .68rem; color: #FFAD70; }
+    .section-header { position: relative; padding-left: 16px; }
+    .section-header::before { content: ""; width: 3px; height: 38px; background: #FF8A32; box-shadow: 0 0 14px #FF8A3255; position: absolute; left: 0; top: 3px; border-radius: 3px; }
+    .theme-toggle-btn { font-weight: 750; }
+    .tab-btn, .filter-btn { border-radius: 9px; font-weight: 750; }
+    .nav-item.active, .nav-item:hover { box-shadow: 0 4px 24px #FF8A3235; }
+    .topology-container, .quiz-container, .qos-simulator { border: 1px solid #FF8A322B; }
+    [data-theme="light"] .sidebar { background: rgba(255,253,250,.95); }
+    [data-theme="light"] .top-header { background: rgba(255,253,250,.90); }
+    [data-theme="light"] .section-card { background: rgba(255,253,250,.91); border-color: #24242820; border-top-color: #FF8A3260; }
+    [data-theme="light"] .section-title-tag { color: #A64800; }
+    @media(max-width:600px) {
+      body, body[data-theme="dark"], body[data-theme="light"] { background-attachment: scroll; background-position: 65% top; }
+      .hero-section { background-position: 65% center; }
+      .hero-badge { font-size: .6rem; }
+    }
+    /* Panel cobre y mayor presencia de la imagen en modo día. */
+    .sidebar, [data-theme="light"] .sidebar {
+      background: radial-gradient(ellipse at 0% 0%, #B44C1C77, transparent 60%),
+                  linear-gradient(165deg, #502517 0%, #301B18 45%, #18131B 100%);
+      border-right: 1px solid #FF9A535C;
+      box-shadow: 8px 0 40px #0004, inset -1px 0 #FFB07515;
+      color: #FFFFFF;
+    }
+    .sidebar-header { border-bottom: 1px solid #FFB07530; }
+    .sidebar-brand span, [data-theme="light"] .sidebar-brand span {
+      -webkit-text-fill-color: #FFFFFF;
+    }
+    .sidebar-brand svg, [data-theme="light"] .sidebar-brand svg { color: #FFAF70; }
+    .sidebar-subtitle, [data-theme="light"] .sidebar-subtitle { color: #E9C9B8; }
+    .sidebar .nav-item, [data-theme="light"] .sidebar .nav-item { color: #F3E7E1; }
+    .sidebar .nav-item-num { color: #FFC69C; opacity: .8; }
+    .sidebar .nav-item:hover, .sidebar .nav-item:focus-visible,
+    .sidebar .nav-item.active, [data-theme="light"] .sidebar .nav-item:hover,
+    [data-theme="light"] .sidebar .nav-item:focus-visible,
+    [data-theme="light"] .sidebar .nav-item.active {
+      background: linear-gradient(110deg, #FF8A32, #FFAD65);
+      color: #261407; border-left-color: #FFE0C4;
+      box-shadow: 0 5px 22px #FF7A2333;
+    }
+    .sidebar .nav-item.active .nav-item-num, .sidebar .nav-item:hover .nav-item-num {
+      color: #261407; opacity: 1;
+    }
+    .sidebar-footer { background: #0000001C; border-top: 1px solid #FFB07525; }
+    .sidebar-footer span { color: #E9C9B8 !important; }
+    body[data-theme="light"] {
+      background-image: linear-gradient(90deg, rgba(255,252,248,.67), rgba(255,252,248,.40)), var(--network-image);
+    }
+    [data-theme="light"] .section-card {
+      background: rgba(255,253,250,.88);
+      box-shadow: 0 12px 38px #3A201C14;
+    }
+    /* Apariencias independientes: negro original y día cálido. */
+    body[data-theme="dark"] .sidebar {
+      background: rgba(7,7,10,.94);
+      border-right: 1px solid #FF8A3233;
+      box-shadow: 4px 0 25px #0004;
+    }
+    [data-theme="dark"] .sidebar-header { border-bottom-color: #FFFFFF14; }
+    [data-theme="dark"] .sidebar-subtitle { color: #C4C4CA; }
+    [data-theme="dark"] .sidebar-footer { background: transparent; border-top-color: #FFFFFF14; }
+    [data-theme="dark"] .sidebar-footer span { color: #B8B8BE !important; }
+    body[data-theme="light"] {
+      --bg-main: #E9DED0;
+      --bg-card: #F4EADF;
+      --bg-sidebar: #DFCEBB;
+      --text-main: #30251F;
+      --text-muted: #68574B;
+      --border-color: #CDB9A5;
+      background-color: #E9DED0;
+      background-image: linear-gradient(90deg, rgba(233,222,208,.83), rgba(233,222,208,.52)), var(--network-image);
+    }
+    body[data-theme="light"] .sidebar {
+      background: radial-gradient(ellipse at top left, #F6DEC180, transparent 65%),
+                  linear-gradient(165deg, #D9BDA1 0%, #CCAA8A 55%, #BD9476 100%);
+      color: #30251F; border-right: 1px solid #98705266;
+      box-shadow: 8px 0 35px #4C2D191C;
+    }
+    [data-theme="light"] .sidebar-brand span { -webkit-text-fill-color: #30251F; }
+    [data-theme="light"] .sidebar-brand svg { color: #8D3D10; }
+    [data-theme="light"] .sidebar-subtitle { color: #634A38; }
+    [data-theme="light"] .sidebar .nav-item { color: #3C2B21; }
+    [data-theme="light"] .sidebar .nav-item-num { color: #754426; }
+    [data-theme="light"] .sidebar-header { border-bottom-color: #80533433; }
+    [data-theme="light"] .sidebar-footer { background: #8053340D; border-top-color: #80533433; }
+    [data-theme="light"] .sidebar-footer span { color: #513A2C !important; }
+    [data-theme="light"] .top-header { background: rgba(233,218,200,.94); }
+    [data-theme="light"] .section-card {
+      background: rgba(245,234,219,.91);
+      border-color: #B89A7B55; border-top-color: #C57136AA;
+    }
+    [data-theme="light"] .theme-toggle-btn { background: #DFC8AE; border-color: #B9815266; }
+    [data-theme="light"] .section-title { color: #30251F; }
+    /* Modo día blanco, navegación naranja y selección negra. */
+    body[data-theme="light"] {
+      --bg-main: #F5F5F7;
+      --bg-card: #FFFFFF;
+      --bg-sidebar: #FFFFFF;
+      --text-main: #202024;
+      --text-muted: #565660;
+      --border-color: #D8D8DF;
+      background-color: #F5F5F7;
+      background-image: linear-gradient(90deg, rgba(255,255,255,.67), rgba(255,255,255,.40)), var(--network-image);
+    }
+    body[data-theme="light"] .sidebar {
+      background: #FF8A32;
+      color: #20150E;
+      border-right: 1px solid #DD6A1D;
+      box-shadow: 6px 0 28px #0000001A;
+    }
+    [data-theme="light"] .sidebar-brand span { -webkit-text-fill-color: #20150E; }
+    [data-theme="light"] .sidebar-brand svg { color: #20150E; filter: none; }
+    [data-theme="light"] .sidebar-subtitle { color: #4F2B12; }
+    [data-theme="light"] .sidebar .nav-item { color: #20150E; }
+    [data-theme="light"] .sidebar .nav-item-num { color: #4F2B12; opacity: 1; }
+    [data-theme="light"] .sidebar .nav-item.active,
+    [data-theme="light"] .sidebar .nav-item:hover,
+    [data-theme="light"] .sidebar .nav-item:focus-visible {
+      background: #101012;
+      color: #FFFFFF;
+      border-left-color: #FFFFFF;
+      box-shadow: 0 4px 16px #00000026;
+    }
+    [data-theme="light"] .sidebar .nav-item.active .nav-item-num,
+    [data-theme="light"] .sidebar .nav-item:hover .nav-item-num,
+    [data-theme="light"] .sidebar .nav-item:focus-visible .nav-item-num { color: #FFFFFF; }
+    [data-theme="light"] .sidebar-header { border-bottom-color: #20150E26; }
+    [data-theme="light"] .sidebar-footer { background: #00000008; border-top-color: #20150E26; }
+    [data-theme="light"] .sidebar-footer span { color: #4F2B12 !important; }
+    [data-theme="light"] .top-header { background: rgba(255,255,255,.94); }
+    [data-theme="light"] .section-card {
+      background: rgba(255,255,255,.91);
+      border-color: #20202420;
+      border-top-color: #FF8A3260;
+    }
+    [data-theme="light"] .theme-toggle-btn { background: #FFFFFF; border-color: #FF8A3266; }
+    [data-theme="light"] .section-title { color: #202024; }
+    /* Modo día: panel blanco y franja superior naranja. */
+    body[data-theme="light"] .sidebar {
+      background: #FFFFFF;
+      color: #202024;
+      border-right: 1px solid #E2E2E7;
+    }
+    [data-theme="light"] .sidebar-header {
+      background: #FF8A32;
+      border-bottom: 1px solid #DD6A1D;
+    }
+    [data-theme="light"] .sidebar-brand span { -webkit-text-fill-color: #20150E; }
+    [data-theme="light"] .sidebar-brand svg { color: #20150E; }
+    [data-theme="light"] .sidebar-subtitle { color: #4F2B12; }
+    [data-theme="light"] .sidebar-nav { background: #FFFFFF; }
+    [data-theme="light"] .sidebar .nav-item { color: #33333B; }
+    [data-theme="light"] .sidebar .nav-item-num { color: #70707A; }
+    [data-theme="light"] .sidebar .nav-item.active,
+    [data-theme="light"] .sidebar .nav-item:hover,
+    [data-theme="light"] .sidebar .nav-item:focus-visible {
+      background: #101012;
+      color: #FFFFFF;
+      border-left-color: #101012;
+      box-shadow: 0 4px 16px #0000001A;
+    }
+    [data-theme="light"] .sidebar .nav-item.active .nav-item-num,
+    [data-theme="light"] .sidebar .nav-item:hover .nav-item-num,
+    [data-theme="light"] .sidebar .nav-item:focus-visible .nav-item-num { color: #FFFFFF; }
+    [data-theme="light"] .sidebar-footer { background: #FFFFFF; border-top-color: #E2E2E7; }
+    [data-theme="light"] .sidebar-footer span { color: #656570 !important; }
+    [data-theme="light"] .top-header {
+      background: #FF8A32;
+      border-bottom: 1px solid #DD6A1D;
+      backdrop-filter: none;
+    }
+    [data-theme="light"] .header-title,
+    [data-theme="light"] .mobile-menu-toggle { color: #20150E; }
+    [data-theme="light"] .theme-toggle-btn {
+      background: #FFFFFF;
+      color: #202024;
+      border-color: #FFFFFF99;
+    }
+
+    /* ==========================================
+       v3 · PALETA DUAL (naranja de marca + cian tecnológico)
+       Semáforo real (verde / ámbar / rojo) y componentes nuevos
+       ========================================== */
+    body[data-theme] {
+      --brand: #FF8A32; --brand-2: #FFB25C;
+      --tech: #38C8F0; --tech-2: #8B9BFF;
+      --ok: #34D399; --warn: #FBBF24; --bad: #F87171;
+      --accent-emerald: #34D399; --accent-amber: #FBBF24; --accent-rose: #F87171;
+      --grad-brand: linear-gradient(110deg, #FF8A32 0%, #FFB25C 40%, #38C8F0 100%);
+      --soft: rgba(255,255,255,.035);
+      --soft-2: rgba(255,255,255,.07);
+      --line: rgba(255,255,255,.10);
+    }
+    body[data-theme="light"] {
+      --brand: #C75A0A; --brand-2: #D97A1C;
+      --tech: #0378A6; --tech-2: #4F46E5;
+      --ok: #0E8A5C; --warn: #A15C07; --bad: #C2283A;
+      --accent-emerald: #0E8A5C; --accent-amber: #A15C07; --accent-rose: #C2283A;
+      --grad-brand: linear-gradient(110deg, #C75A0A 0%, #E0861F 40%, #0378A6 100%);
+      --soft: rgba(20,20,30,.035);
+      --soft-2: rgba(20,20,30,.06);
+      --line: rgba(20,20,30,.12);
+    }
+
+    /* Hover más rápido en todos los elementos */
+    *, *::before, *::after { transition-duration: .1s !important; }
+    .flip-card-inner { transition-duration: .45s !important; }
+    .read-progress { transition-duration: 0s !important; }
+
+    /* Barra de progreso de lectura */
+    .read-progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; z-index: 400;
+      background: var(--grad-brand); box-shadow: 0 0 14px #FF8A3288; transition: width .1s linear; }
+
+    /* Texto con degradado y detalles de marca */
+    .grad-text { background: var(--grad-brand); -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent; }
+    .hero-title .grad-text { background: linear-gradient(110deg, #FF8A32, #FFC27A 45%, #5ED6F7); -webkit-background-clip: text; background-clip: text; }
+    .section-card { position: relative; overflow: hidden; }
+    .section-card::after { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--grad-brand); opacity: .85; }
+    .section-header::before { background: linear-gradient(180deg, var(--brand), var(--tech)) !important; }
+    .section-title-tag { color: var(--tech) !important; }
+    [data-theme="light"] .section-title-tag { color: var(--tech) !important; }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: -8px 0 28px; }
+    .hero-chips span { font-size: .72rem; font-weight: 750; padding: 6px 12px; border-radius: 999px;
+      background: #0B1218B3; border: 1px solid #38C8F055; color: #BFEFFF; letter-spacing: .02em; }
+    .hero-chips span:nth-child(odd) { border-color: #FF8A3266; color: #FFD2AE; }
+    .hero-meta-item p.small { font-size: .8rem; font-weight: 550; color: #D6D6DD !important; }
+
+    /* Utilidades de maquetación */
+    .lead { font-size: 1.05rem; line-height: 1.75; margin-bottom: 22px; }
+    .muted { color: var(--text-muted); }
+    .mt-0 { margin-top: 0 !important; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 18px; }
+    .grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+    .subhead { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; margin: 34px 0 14px; }
+    .subhead .num { font-size: .7rem; font-weight: 850; padding: 4px 9px; border-radius: 6px;
+      background: var(--soft-2); border: 1px solid var(--line); color: var(--tech); letter-spacing: .06em; }
+    .info-card { background: var(--soft); border: 1px solid var(--line); border-left: 4px solid var(--brand);
+      border-radius: var(--radius-sm); padding: 18px 20px; }
+    .info-card h4 { margin-bottom: 8px; font-size: 1rem; }
+    .info-card p, .info-card li { font-size: .9rem; color: var(--text-muted); }
+    .info-card ul { padding-left: 18px; display: grid; gap: 4px; }
+    .info-card .ic { font-size: 1.3rem; margin-bottom: 6px; display: block; }
+    .c-tech { border-left-color: var(--tech); } .c-ok { border-left-color: var(--ok); }
+    .c-warn { border-left-color: var(--warn); } .c-bad { border-left-color: var(--bad); }
+    .c-violet { border-left-color: var(--tech-2); }
+    .chip { display: inline-block; font-size: .7rem; font-weight: 800; padding: 3px 9px; border-radius: 999px;
+      background: var(--soft-2); border: 1px solid var(--line); color: var(--text-main); white-space: nowrap; }
+    .chip.ok { color: var(--ok); border-color: currentColor; } .chip.warn { color: var(--warn); border-color: currentColor; }
+    .chip.bad { color: var(--bad); border-color: currentColor; } .chip.tech { color: var(--tech); border-color: currentColor; }
+    .chip.brand { color: var(--brand); border-color: currentColor; }
+    .callout { margin-top: 18px; padding: 14px 18px; border-radius: var(--radius-sm); font-size: .9rem;
+      background: linear-gradient(90deg, #38C8F014, transparent); border: 1px solid #38C8F040; }
+    .cite { color: var(--text-muted); font-size: .85em; white-space: nowrap; }
+    .custom-table td, .custom-table th { vertical-align: top; }
+    .custom-table.compact td, .custom-table.compact th { padding: 11px 14px; font-size: .85rem; }
+    .custom-table tbody tr { transition: background-color .15s; }
+    .custom-table tbody tr:hover td { background: #FF8A3212; }
+    .custom-table td code, .mono { font-family: Consolas, "Cascadia Mono", monospace; font-size: .82rem; color: var(--tech); }
+    .table-container + .table-note { font-size: .78rem; color: var(--text-muted); margin-top: 8px; }
+
+    /* Matriz de riesgos 3x3 */
+    .risk-layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+    .risk-matrix { display: grid; grid-template-columns: 34px 54px repeat(3, minmax(0,1fr)); gap: 8px; }
+    .axis-y { grid-row: 1 / span 3; display: flex; align-items: center; justify-content: center;
+      writing-mode: vertical-rl; transform: rotate(180deg); font-size: .7rem; font-weight: 850; letter-spacing: .14em; color: var(--text-muted); }
+    .axis-x { grid-column: 3 / span 3; text-align: center; font-size: .7rem; font-weight: 850; letter-spacing: .14em; color: var(--text-muted); }
+    .mlabel { display: flex; align-items: center; justify-content: center; font-size: .7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; text-align: center; }
+    .rcell { min-height: 92px; border-radius: var(--radius-sm); padding: 10px; border: 1px solid transparent; cursor: pointer;
+      display: flex; flex-direction: column; justify-content: space-between; gap: 6px; text-align: left;
+      font: inherit; color: var(--text-main); transition: transform .15s, box-shadow .15s; }
+    .rcell:hover, .rcell.selected { transform: translateY(-2px); box-shadow: 0 0 0 2px currentColor inset, 0 8px 22px #0005; }
+    .rcell .rt { font-size: .8rem; font-weight: 800; line-height: 1.25; color: var(--text-main); }
+    .rcell .chip { align-self: flex-start; }
+    .lv-crit { background: #F8717124; border-color: #F8717166; color: var(--bad); }
+    .lv-high { background: #FF8A3224; border-color: #FF8A3266; color: var(--brand); }
+    .lv-med  { background: #FBBF2420; border-color: #FBBF2460; color: var(--warn); }
+    .lv-low  { background: #34D3991C; border-color: #34D39955; color: var(--ok); }
+    .rcell.empty { cursor: default; opacity: .45; background: var(--soft); border: 1px dashed var(--line); color: var(--text-muted); }
+    .rcell.empty:hover { transform: none; box-shadow: none; }
+    .risk-panel { background: var(--soft); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 20px; min-height: 100%; }
+    .risk-panel h4 { font-size: 1.05rem; margin-bottom: 10px; }
+    .risk-panel dl { display: grid; gap: 10px; }
+    .risk-panel dt { font-size: .68rem; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; color: var(--tech); }
+    .risk-panel dd { font-size: .88rem; color: var(--text-muted); }
+    .risk-panel a { color: var(--brand); font-weight: 750; font-size: .85rem; }
+    .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+    /* Pestañas */
+    .tab-content h3 { font-size: 1.15rem; margin-bottom: 10px; }
+    .tab-content > p { margin-bottom: 14px; }
+    .tab-btn { border: 1px solid transparent; }
+    .tab-btn .tn { font-size: .66rem; opacity: .7; margin-right: 6px; }
+
+    /* Topología */
+    .topology-container, [data-theme="light"] .topology-container { background: radial-gradient(ellipse at 70% 0%, #38C8F012, transparent 60%), #0A0C11;
+      overflow-x: auto; padding: 12px; text-align: left; }
+    .topo { display: block; width: 100%; min-width: 760px; height: auto; }
+    .topo text { fill: #F4F6FA; font-family: var(--font-family); font-size: 12px; font-weight: 800; pointer-events: none; }
+    .topo .sub { fill: #A7AFC0; font-size: 9.5px; font-weight: 600; }
+    .topo .zlabel { font-size: 10px; font-weight: 850; letter-spacing: .1em; }
+    .topo .llabel { fill: #8D96A8; font-size: 9px; font-weight: 700; }
+    .zone { fill-opacity: .06; stroke-width: 1.2; stroke-dasharray: 5 5; transition: all .3s; }
+    .node-element rect, .node-element circle, .node-element ellipse { fill: #161A22; stroke-width: 1.6; transition: all .25s; }
+    .node-element:hover rect, .node-element:hover circle, .node-element:hover ellipse,
+    .node-element:focus-visible rect, .node-element:focus-visible circle, .node-element:focus-visible ellipse { fill: #22293A; stroke-width: 2.6; }
+    .node-element:focus { outline: none; }
+    .lk { stroke: #5C6577; stroke-width: 2; fill: none; transition: all .3s; }
+    .lk.radio { stroke: #FF8A32; stroke-dasharray: 3 5; stroke-width: 1.6; }
+    .lk.ctrl { stroke: #8B9BFF; stroke-dasharray: 2 4; }
+    .lk.mon { stroke: #38C8F0; stroke-dasharray: 2 4; }
+    .lk.flow { stroke-dasharray: 7 6; animation: flow 1.2s linear infinite; }
+    .lk.standby { opacity: .22; stroke-dasharray: 4 6; animation: none; }
+    .is-down.lk { stroke: #F87171 !important; stroke-dasharray: 3 6 !important; opacity: .9 !important; animation: none !important; }
+    .is-backup.lk { stroke: #38C8F0 !important; opacity: 1 !important; stroke-width: 3.2 !important; stroke-dasharray: 8 5 !important;
+      animation: flow .7s linear infinite !important; filter: drop-shadow(0 0 4px #38C8F0); }
+    .node-element.is-down rect, .node-element.is-down circle { stroke: #F87171 !important; fill: #2A1215 !important; }
+    .node-element.is-down { opacity: .7; }
+    .node-element.is-backup rect, .node-element.is-backup circle { stroke: #38C8F0 !important; filter: drop-shadow(0 0 6px #38C8F0aa); }
+    .zone.is-down { fill: #F87171 !important; fill-opacity: .12 !important; stroke: #F87171 !important; }
+    .zone.is-backup { fill-opacity: .14 !important; stroke-dasharray: none; }
+    @keyframes flow { to { stroke-dashoffset: -26; } }
+    .topo-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 16px 0 10px; }
+    .topo-tools .lbl { font-size: .75rem; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; color: var(--tech); margin-right: 4px; }
+    .plan-box { border-radius: var(--radius-sm); padding: 14px 18px; border: 1px solid var(--line); background: var(--soft); font-size: .9rem; }
+    .plan-box strong { display: block; margin-bottom: 4px; }
+    .plan-box.alert { border-color: #F8717166; background: linear-gradient(90deg, #F871711A, transparent); }
+    .topo-legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .75rem; color: var(--text-muted); margin-top: 10px; }
+    .topo-legend i { display: inline-block; width: 22px; height: 0; border-top: 2px solid; vertical-align: middle; margin-right: 6px; }
+
+    /* Modal */
+    .modal-card .chip { margin-bottom: 14px; }
+    .modal-card h5 { font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--tech); margin: 12px 0 4px; }
+    .modal-card p { font-size: .9rem; color: var(--text-muted); }
+
+    /* Tablero de monitoreo */
+    .dash { background: #0A0C11; border: 1px solid #38C8F033; border-radius: var(--radius-md); padding: 18px; color: #F4F6FA; }
+    .dash-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .dash-top .live { font-size: .75rem; font-weight: 800; letter-spacing: .1em; color: #A7AFC0; display: flex; align-items: center; gap: 8px; }
+    .dash-top .live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #34D399; box-shadow: 0 0 10px #34D399; animation: pulse 1.6s infinite; }
+    @keyframes pulse { 50% { opacity: .35; } }
+    .dash-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
+    .tile { background: #12161F; border: 1px solid #FFFFFF14; border-top: 3px solid #34D399; border-radius: 10px; padding: 12px 14px; transition: border-color .3s; }
+    .tile .tn { font-size: .72rem; color: #A7AFC0; font-weight: 700; min-height: 2.4em; }
+    .tile .tv { font-size: 1.55rem; font-weight: 850; font-variant-numeric: tabular-nums; letter-spacing: -.02em; margin: 4px 0; }
+    .tile .tv small { font-size: .75rem; color: #A7AFC0; margin-left: 3px; }
+    .tile .ts { font-size: .7rem; font-weight: 850; letter-spacing: .08em; }
+    .tile.st-ok { border-top-color: #34D399; } .tile.st-ok .ts { color: #34D399; }
+    .tile.st-warn { border-top-color: #FBBF24; } .tile.st-warn .ts { color: #FBBF24; }
+    .tile.st-bad { border-top-color: #F87171; background: #1F1214; } .tile.st-bad .ts { color: #F87171; }
+    .dash-log { margin-top: 12px; background: #12161F; border-radius: 10px; padding: 12px 14px; font-family: Consolas, "Cascadia Mono", monospace; font-size: .76rem; color: #C7CDDA; max-height: 150px; overflow-y: auto; }
+    .dash-log div { padding: 3px 0; border-bottom: 1px dashed #FFFFFF10; }
+    .dash-log .t { color: #38C8F0; margin-right: 8px; }
+    .dash-log .e { color: #F87171; } .dash-log .a { color: #34D399; }
+    .btn-main { font: inherit; font-weight: 800; font-size: .82rem; padding: 9px 16px; border-radius: 9px; cursor: pointer;
+      border: 1px solid #F8717188; background: #F8717122; color: #FFB4B4; }
+    .btn-main:hover, .btn-main:focus-visible { background: #F87171; color: #1A0B0C; }
+    .btn-main:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* QoS */
+    .qos-cards { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; margin-bottom: 24px; }
+    .qos-cards .info-card .metric { font-size: 1.35rem; font-weight: 850; color: var(--text-main); margin: 2px 0 6px; }
+    .traffic { display: flex; gap: 22px; align-items: center; justify-content: center; }
+    .traffic-light { background: #07080B; border: 2px solid #2A2F3A; border-radius: 40px; padding: 10px; display: grid; gap: 10px; }
+    .tl { width: 38px; height: 38px; border-radius: 50%; opacity: .16; transition: all .25s; }
+    .tl.r { background: #F87171; } .tl.y { background: #FBBF24; } .tl.g { background: #34D399; }
+    .tl.on { opacity: 1; box-shadow: 0 0 22px currentColor; }
+    .tl.r.on { color: #F87171; } .tl.y.on { color: #FBBF24; } .tl.g.on { color: #34D399; }
+    .param-status { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 14px; }
+    .calc { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)) 1.2fr; gap: 16px; align-items: end;
+      background: var(--soft); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 20px; }
+    .calc label { display: grid; gap: 6px; font-size: .8rem; font-weight: 800; }
+    .calc select, .calc input[type=number] { font: inherit; font-size: .9rem; padding: 8px 10px; border-radius: 8px;
+      background: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color); }
+    .calc-out { text-align: center; }
+    .calc-out .big { font-size: 1.9rem; font-weight: 850; font-variant-numeric: tabular-nums; }
+    .bar { height: 8px; border-radius: 99px; background: var(--soft-2); overflow: hidden; margin: 8px 0 6px; }
+    .bar > span { display: block; height: 100%; width: 0; background: var(--ok); border-radius: 99px; transition: width .3s, background-color .3s; }
+
+    /* Seguridad */
+    .flip-card { height: 250px; }
+    .flip-card-front h4, .flip-card-back h4 { font-size: .98rem; }
+    .flip-card-front .ic { font-size: 1.4rem; display: block; margin-bottom: 6px; }
+    .flip-card-back { border-color: #38C8F055 !important; }
+    .flip-card-back h4 { color: var(--tech) !important; }
+    .checklist { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px 18px; margin-top: 10px; }
+    .check-item { display: flex; gap: 10px; align-items: flex-start; font-size: .88rem; padding: 10px 12px; border-radius: 8px;
+      background: var(--soft); border: 1px solid var(--line); cursor: pointer; }
+    .check-item input { margin-top: 3px; accent-color: #34D399; width: 16px; height: 16px; flex-shrink: 0; }
+    .check-item:has(input:checked) { border-color: #34D39966; background: #34D39912; }
+    .check-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .check-head .bar { flex: 1; min-width: 160px; margin: 0; }
+
+    /* Innovación */
+    .innov-card { background: var(--soft); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 22px; position: relative; overflow: hidden; }
+    .innov-card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--c, var(--brand)); }
+    .innov-card .ic { font-size: 1.6rem; }
+    .innov-card h4 { font-size: 1.1rem; margin: 6px 0 10px; }
+    .innov-card h5 { font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; color: var(--c, var(--brand)); margin: 12px 0 4px; }
+    .innov-card p, .innov-card li { font-size: .87rem; color: var(--text-muted); }
+    .innov-card ul { padding-left: 18px; }
+    .flowline { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 22px; font-size: .82rem; font-weight: 750; }
+    .flowline span { padding: 8px 12px; border-radius: 8px; background: var(--soft-2); border: 1px solid var(--line); }
+    .flowline b { color: var(--tech); }
+
+    /* Discusión */
+    .pro-list, .con-list { list-style: none; display: grid; gap: 8px; }
+    .pro-list li, .con-list li { position: relative; padding-left: 26px; font-size: .9rem; color: var(--text-muted); }
+    .pro-list li::before { content: "✓"; position: absolute; left: 0; color: var(--ok); font-weight: 900; }
+    .con-list li::before { content: "!"; position: absolute; left: 4px; color: var(--warn); font-weight: 900; }
+    .pro-list strong, .con-list strong { color: var(--text-main); }
+    .win { color: var(--ok); font-weight: 800; }
+    .filter-btn-group { flex-wrap: wrap; }
+
+    /* Conclusiones */
+    .concl-card { background: var(--soft); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 20px; }
+    .concl-card h4 { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+    .concl-card ul { padding-left: 18px; display: grid; gap: 8px; font-size: .9rem; color: var(--text-muted); }
+
+    /* Referencias y quiz */
+    .apa-list li a { color: var(--tech); word-break: break-all; }
+    .quiz-q { margin-bottom: 22px; }
+    .quiz-q > p { font-weight: 750; margin-bottom: 10px; }
+    .quiz-option { width: 100%; text-align: left; font: inherit; font-size: .9rem; color: var(--text-main); }
+    .quiz-option:disabled { cursor: default; }
+    .quiz-q .quiz-feedback { margin-top: 6px; }
+    .quiz-score { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 14px 18px; border-radius: var(--radius-sm);
+      background: linear-gradient(90deg, #FF8A3218, #38C8F018); border: 1px solid var(--line); font-weight: 800; }
+    .quiz-score .big { font-size: 1.5rem; }
+    .page-footer { text-align: center; font-size: .8rem; color: var(--text-muted); padding: 10px 0 30px; }
+
+    /* Modo claro: tablas y tarjetas */
+    [data-theme="light"] .flip-card-back { background: #EAF7FC !important; }
+    [data-theme="light"] .custom-table tbody tr:hover td { background: #FF8A3214; }
+
+    /* ==========================================
+       FONDO FUTURISTA: cuadrícula + brillos + red animada (canvas)
+       ========================================== */
+    body[data-theme="dark"] {
+      background-color: #05060A;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 85% 0%, rgba(56,200,240,.17), transparent 60%),
+        radial-gradient(ellipse 55% 45% at 8% 100%, rgba(255,138,50,.17), transparent 60%),
+        linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+      background-size: auto, auto, 46px 46px, 46px 46px;
+      background-position: 0 0;
+      background-attachment: fixed;
+    }
+    body[data-theme="light"] {
+      background-color: #F3F5F9;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 85% 0%, rgba(3,120,166,.12), transparent 60%),
+        radial-gradient(ellipse 55% 45% at 8% 100%, rgba(255,138,50,.14), transparent 60%),
+        linear-gradient(rgba(20,20,40,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(20,20,40,.045) 1px, transparent 1px);
+      background-size: auto, auto, 46px 46px, 46px 46px;
+      background-position: 0 0;
+      background-attachment: fixed;
+    }
+    #bgNet { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+    body[data-theme="dark"] .section-card { background: rgba(9,10,15,.74); backdrop-filter: blur(3px); }
+    body[data-theme="light"] .section-card { background: rgba(255,255,255,.86); backdrop-filter: blur(3px); }
+    /* Compatibilidad con Safari anterior a la versión 18 */
+    .section-card { -webkit-backdrop-filter: blur(3px); }
+    .sidebar, .top-header { -webkit-backdrop-filter: blur(16px); }
+    .modal-overlay { -webkit-backdrop-filter: blur(4px); }
+
+    /* ==========================================
+       PORTADA: núcleo de red animado (SVG propio)
+       ========================================== */
+    .hero-section, [data-theme="light"] .hero-section {
+      background-color: #07080D;
+      background-image:
+        radial-gradient(circle at 80% 38%, rgba(56,200,240,.20), transparent 38%),
+        radial-gradient(circle at 72% 60%, rgba(255,138,50,.18), transparent 42%),
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(120deg, #0B0D14 0%, #08090E 55%, #140C07 100%);
+      background-size: auto, auto, 32px 32px, 32px 32px, auto;
+    }
+    .hero-section > *:not(.hero-art) { position: relative; z-index: 1; }
+    .hero-art { position: absolute; right: 2.5%; top: 26px; width: min(40%, 440px); height: auto; z-index: 0; pointer-events: none; }
+    .hero-art text { font-family: var(--font-family); font-weight: 850; fill: #FFFFFF; }
+    .hero-art .s { font-size: 8px; font-weight: 650; fill: #AEB6C6; letter-spacing: .04em; }
+    .spin { transform-origin: 220px 210px; animation: spin 48s linear infinite; }
+    .spin.rev { animation-duration: 32s; animation-direction: reverse; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .pulse-ring { transform-origin: 220px 210px; animation: pulseRing 3.2s ease-out infinite; }
+    .pulse-ring.d2 { animation-delay: 1.6s; }
+    @keyframes pulseRing { from { transform: scale(1); opacity: .7; } to { transform: scale(3.6); opacity: 0; } }
+    .spoke { stroke-dasharray: 4 5; animation: flow 1.1s linear infinite; }
+    .core-glow { animation: pulse 2.6s ease-in-out infinite; }
+    @media (min-width: 1101px) {
+      .hero-section .hero-title, .hero-section .hero-subtitle, .hero-section .hero-chips { max-width: 58%; }
+      .hero-section .hero-title { font-size: clamp(2rem, 3vw, 3.1rem); }
+    }
+    @media (max-width: 1100px) {
+      .hero-art { width: 320px; right: -70px; top: 10px; opacity: .28; }
+    }
+
+    @media (max-width: 1100px) {
+      .dash-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .qos-cards { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .calc { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      .calc-out { grid-column: 1 / -1; }
+      .risk-layout { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .grid-2, .grid-3, .checklist { grid-template-columns: 1fr; }
+      .qos-cards { grid-template-columns: 1fr; }
+      .calc { grid-template-columns: 1fr; }
+      .risk-matrix { grid-template-columns: 22px 40px repeat(3, minmax(0,1fr)); gap: 5px; }
+      .rcell { min-height: 78px; padding: 7px; }
+      .rcell .rt { font-size: .68rem; }
+      .rcell .chip { font-size: .58rem; padding: 2px 6px; }
+      .mlabel { font-size: .58rem; }
+      .traffic { flex-direction: column; }
+      .flip-card { height: 270px; }
+      .custom-table { min-width: 640px; }
+    }
+    @media (max-width: 420px) {
+      .dash-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .tile .tv { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+<canvas id="bgNet" aria-hidden="true"></canvas>
+<div class="read-progress" id="readProgress"></div>
+<a href="#sec-hero" class="skip-link">Ir al contenido</a>
+<div class="menu-backdrop" id="menuBackdrop"></div>
+
+  <!-- ==========================================
+       SIDEBAR DE NAVEGACIÓN (letras = estructura del punto 6)
+       ========================================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <span>AgroNet 360</span>
+      </div>
+      <div class="sidebar-subtitle">Informe técnico interactivo</div>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Secciones del informe">
+      <a href="#sec-hero" class="nav-item active"><span class="nav-item-num">a</span> Portada</a>
+      <a href="#sec-intro" class="nav-item"><span class="nav-item-num">b</span> Introducción</a>
+      <a href="#sec-diag" class="nav-item"><span class="nav-item-num">c</span> Diagnóstico del problema</a>
+      <a href="#sec-teoria" class="nav-item"><span class="nav-item-num">d</span> Fundamentación teórica</a>
+      <a href="#sec-diseno" class="nav-item"><span class="nav-item-num">e</span> Diseño de la solución</a>
+      <a href="#sec-monitoreo" class="nav-item"><span class="nav-item-num">f</span> Estrategia de monitoreo</a>
+      <a href="#sec-qos" class="nav-item"><span class="nav-item-num">g</span> Análisis de QoS</a>
+      <a href="#sec-seguridad" class="nav-item"><span class="nav-item-num">h</span> Seguridad</a>
+      <a href="#sec-innovacion" class="nav-item"><span class="nav-item-num">i</span> Innovación tecnológica</a>
+      <a href="#sec-discusion" class="nav-item"><span class="nav-item-num">j</span> Discusión</a>
+      <a href="#sec-conclusiones" class="nav-item"><span class="nav-item-num">k</span> Conclusiones</a>
+      <a href="#sec-ref" class="nav-item"><span class="nav-item-num">l</span> Referencias APA 7</a>
+      <a href="#sec-bonus" class="nav-item"><span class="nav-item-num">★</span> Mini-quiz de repaso</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <span style="font-size: 0.75rem; color: #B8B8BE;">Lectura estimada ≈ 13 min</span>
+    </div>
+  </aside>
+
+  <!-- ==========================================
+       CONTENIDO PRINCIPAL
+       ========================================== -->
+  <div class="main-wrapper">
+
+    <header class="top-header">
+      <button class="mobile-menu-toggle" id="menuToggle" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menú">☰</button>
+      <div class="header-title">Actualización en Telecomunicaciones &bull; Informe técnico interactivo</div>
+      <button class="theme-toggle-btn" id="themeToggle">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <span id="themeLabel">Modo blanco</span>
+      </button>
+    </header>
+
+    <main class="content-area">
+
+      <!-- a. PORTADA -->
+      <section id="sec-hero" class="hero-section">
+        <svg class="hero-art" viewBox="0 0 440 420" aria-hidden="true">
+          <defs>
+            <radialGradient id="coreGlow">
+              <stop offset="0%" stop-color="#FF8A32" stop-opacity=".55"/>
+              <stop offset="60%" stop-color="#38C8F0" stop-opacity=".12"/>
+              <stop offset="100%" stop-color="#38C8F0" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#FF8A32"/>
+              <stop offset="100%" stop-color="#38C8F0"/>
+            </linearGradient>
+          </defs>
+
+          <circle class="core-glow" cx="220" cy="210" r="150" fill="url(#coreGlow)"/>
+          <circle class="pulse-ring" cx="220" cy="210" r="52" fill="none" stroke="#38C8F0" stroke-width="1.2"/>
+          <circle class="pulse-ring d2" cx="220" cy="210" r="52" fill="none" stroke="#FF8A32" stroke-width="1.2"/>
+
+          <g class="spin">
+            <circle cx="220" cy="210" r="196" fill="none" stroke="#38C8F0" stroke-opacity=".35" stroke-width="1" stroke-dasharray="2 7"/>
+            <circle cx="416" cy="210" r="4" fill="#38C8F0"/>
+            <circle cx="24" cy="210" r="3" fill="#FF8A32"/>
+            <circle cx="220" cy="14" r="3" fill="#38C8F0"/>
+            <circle cx="220" cy="406" r="4" fill="#FF8A32"/>
+          </g>
+          <g class="spin rev">
+            <circle cx="220" cy="210" r="172" fill="none" stroke="url(#ringGrad)" stroke-opacity=".5" stroke-width="1.4" stroke-dasharray="40 14 4 14"/>
+            <circle cx="342" cy="88" r="3.5" fill="#FFB25C"/>
+            <circle cx="98" cy="332" r="3.5" fill="#5ED6F7"/>
+          </g>
+          <circle cx="220" cy="210" r="96" fill="none" stroke="url(#ringGrad)" stroke-opacity=".45" stroke-width="1"/>
+
+          <!-- Anillo entre servicios -->
+          <polygon points="220,70 341,140 341,280 220,350 99,280 99,140" fill="none" stroke="#FFFFFF" stroke-opacity=".12" stroke-width="1" stroke-dasharray="3 6"/>
+
+          <!-- Enlaces del núcleo a cada servicio -->
+          <line class="spoke" x1="220" y1="210" x2="220" y2="70" stroke="#FF8A32" stroke-width="1.4"/>
+          <line class="spoke" x1="220" y1="210" x2="341" y2="140" stroke="#8B9BFF" stroke-width="1.4"/>
+          <line class="spoke" x1="220" y1="210" x2="341" y2="280" stroke="#38C8F0" stroke-width="1.4"/>
+          <line class="spoke" x1="220" y1="210" x2="220" y2="350" stroke="#34D399" stroke-width="1.4"/>
+          <line class="spoke" x1="220" y1="210" x2="99" y2="280" stroke="#38C8F0" stroke-width="1.4"/>
+          <line class="spoke" x1="220" y1="210" x2="99" y2="140" stroke="#F87171" stroke-width="1.4"/>
+
+          <!-- Paquetes de datos viajando -->
+          <g><animateMotion dur="2.2s" repeatCount="indefinite" path="M220,70 L220,210"/><circle r="3.5" fill="#FFB25C"/></g>
+          <g><animateMotion dur="2.6s" begin=".4s" repeatCount="indefinite" path="M220,210 L341,140"/><circle r="3.5" fill="#B3BEFF"/></g>
+          <g><animateMotion dur="2.4s" begin=".8s" repeatCount="indefinite" path="M341,280 L220,210"/><circle r="3.5" fill="#8FE2F8"/></g>
+          <g><animateMotion dur="2s" begin=".2s" repeatCount="indefinite" path="M220,210 L220,350"/><circle r="3.5" fill="#86EBC4"/></g>
+          <g><animateMotion dur="2.8s" begin="1s" repeatCount="indefinite" path="M99,280 L220,210"/><circle r="3.5" fill="#8FE2F8"/></g>
+          <g><animateMotion dur="2.3s" begin=".6s" repeatCount="indefinite" path="M220,210 L99,140"/><circle r="3.5" fill="#FFB4B4"/></g>
+
+          <!-- Núcleo -->
+          <polygon points="220,156 267,183 267,237 220,264 173,237 173,183" fill="#0C0F17" stroke="url(#ringGrad)" stroke-width="2.4"/>
+          <polygon points="220,170 255,190 255,230 220,250 185,230 185,190" fill="none" stroke="#FFFFFF" stroke-opacity=".12" stroke-width="1"/>
+          <text x="220" y="207" text-anchor="middle" font-size="15">AgroNet</text>
+          <text x="220" y="225" text-anchor="middle" font-size="13" style="fill:#FFB25C">360</text>
+
+          <!-- Servicios -->
+          <g><circle cx="220" cy="70" r="29" fill="#0C0F17" stroke="#FF8A32" stroke-width="2"/><text x="220" y="70" text-anchor="middle" font-size="12">IoT</text><text class="s" x="220" y="82" text-anchor="middle">LoRaWAN</text></g>
+          <g><circle cx="341" cy="140" r="29" fill="#0C0F17" stroke="#8B9BFF" stroke-width="2"/><text x="341" y="140" text-anchor="middle" font-size="12">SDN</text><text class="s" x="341" y="152" text-anchor="middle">NFV</text></g>
+          <g><circle cx="341" cy="280" r="29" fill="#0C0F17" stroke="#38C8F0" stroke-width="2"/><text x="341" y="280" text-anchor="middle" font-size="12">Cloud</text><text class="s" x="341" y="292" text-anchor="middle">VPC · K8s</text></g>
+          <g><circle cx="220" cy="350" r="29" fill="#0C0F17" stroke="#34D399" stroke-width="2"/><text x="220" y="350" text-anchor="middle" font-size="12">VoIP</text><text class="s" x="220" y="362" text-anchor="middle">UCaaS</text></g>
+          <g><circle cx="99" cy="280" r="29" fill="#0C0F17" stroke="#38C8F0" stroke-width="2"/><text x="99" y="280" text-anchor="middle" font-size="12">NOC</text><text class="s" x="99" y="292" text-anchor="middle">PRTG</text></g>
+          <g><circle cx="99" cy="140" r="29" fill="#0C0F17" stroke="#F87171" stroke-width="2"/><text x="99" y="140" text-anchor="middle" font-size="12">WAF</text><text class="s" x="99" y="152" text-anchor="middle">IAM</text></g>
+        </svg>
+        <span class="hero-badge">Caso de estudio · AgroLogistics Global</span>
+        <h1 class="hero-title">Proyecto <span class="grad-text">AgroNet 360</span>: red convergente definida por software para el agro</h1>
+        <p class="hero-subtitle">
+          Propuesta conceptual para modernizar la infraestructura de telecomunicaciones de AgroLogistics Global integrando SDN/NFV, IoT LPWAN, comunicaciones unificadas en la nube, arquitectura multinube con contenedores, monitoreo continuo y ciberseguridad cloud.
+        </p>
+        <div class="hero-chips" aria-label="Enfoques del proyecto">
+          <span>SDN · NFV</span><span>LoRaWAN · NB-IoT</span><span>UCaaS · SIP Trunking</span><span>AWS VPC · Azure VNet · Kubernetes</span><span>PRTG · Splunk</span><span>IAM/RBAC · WAF</span>
+        </div>
+
+        <div class="hero-meta-grid">
+          <div class="hero-meta-item"><h4>Nombre del proyecto</h4><p>AgroNet 360</p><p class="small">Informe técnico interactivo</p></div>
+          <div class="hero-meta-item"><h4>Integrantes · ficha del curso</h4><p>Arévalo Romero Angie Paola</p><p class="small">Ficha 54469</p><p>Tique Alape Andrés</p><p class="small">Ficha 54469</p></div>
+          <div class="hero-meta-item"><h4>Asignatura</h4><p>Actualización en Telecomunicaciones</p><p class="small">Modalidad colaborativa</p></div>
+          <div class="hero-meta-item"><h4>Docente</h4><p>Jorge Mario González Canizales</p></div>
+        </div>
+      </section>
+
+      <!-- b. INTRODUCCIÓN -->
+      <section id="sec-intro" class="section-card">
+        <div class="section-header">
+          <div>
+            <div class="section-title-tag">Sección b</div>
+            <h2 class="section-title">Introducción</h2>
+          </div>
+        </div>
+        <p class="lead">
+          Las telecomunicaciones actuales ya no se definen por cables y equipos aislados, sino por <strong>servicios programables</strong>: voz, datos, video e IoT viajan sobre la misma red IP, se controlan por software y se consumen desde la nube. Para una empresa agrologística, la red es el sistema nervioso que conecta el cultivo, la bodega, el camión y la oficina.
+        </p>
+
+        <div class="grid-3">
+          <div class="info-card c-tech">
+            <span class="ic">📡</span>
+            <h4>Contexto actual</h4>
+            <ul>
+              <li>Convergencia total sobre IP (voz, video, datos, IoT).</li>
+              <li>Redes definidas por software (SDN) y funciones virtualizadas (NFV).</li>
+              <li>Miles de millones de dispositivos IoT conectados por LPWAN y 5G.</li>
+              <li>Servicios de nube pública como plataforma por defecto.</li>
+            </ul>
+          </div>
+          <div class="info-card">
+            <span class="ic">🏢</span>
+            <h4>Importancia para la empresa</h4>
+            <ul>
+              <li>Si la red cae, se detienen ventas, despachos y facturación.</li>
+              <li>La calidad de la comunicación entre sedes define la velocidad de respuesta logística.</li>
+              <li>La seguridad de la red protege datos de clientes y del negocio.</li>
+            </ul>
+          </div>
+          <div class="info-card c-ok">
+            <span class="ic">🌱</span>
+            <h4>Relación con la transformación digital</h4>
+            <ul>
+              <li>Digitalizar el campo: agricultura de precisión con datos de sensores.</li>
+              <li>Trazabilidad de cosecha a cliente en tiempo real.</li>
+              <li>Decisiones basadas en datos y automatización, imposibles sin una red moderna.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 class="subhead"><span class="num">MAPA</span> Del problema a la solución</h3>
+        <div class="table-container">
+          <table class="custom-table compact">
+            <thead><tr><th>Desafío del caso</th><th>Enfoque tecnológico propuesto</th><th>Sección</th></tr></thead>
+            <tbody>
+              <tr><td>Redes rígidas con enrutadores y firewalls físicos</td><td>SDN (OpenFlow / Cisco ACI) + NFV + SD-WAN</td><td><a href="#sec-diseno" class="mono">e</a></td></tr>
+              <tr><td>Sensores IoT rurales desconectados</td><td>LPWAN: LoRaWAN privada + NB-IoT complementario</td><td><a href="#sec-teoria" class="mono">d</a> · <a href="#sec-diseno" class="mono">e</a></td></tr>
+              <tr><td>Telefonía análoga entre sucursales</td><td>UCaaS, PBX virtual y SIP Trunking</td><td><a href="#sec-qos" class="mono">g</a></td></tr>
+              <tr><td>Nube AWS + Azure sin estrategia</td><td>VPC/VNet hub-and-spoke, Docker y Kubernetes, alta disponibilidad</td><td><a href="#sec-diseno" class="mono">e</a></td></tr>
+              <tr><td>Ceguera operativa y brechas de seguridad</td><td>PRTG + Splunk; IAM/RBAC, MFA y WAF</td><td><a href="#sec-monitoreo" class="mono">f</a> · <a href="#sec-seguridad" class="mono">h</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- c. DIAGNÓSTICO -->
+      <section id="sec-diag" class="section-card">
+        <div class="section-header">
+          <div>
+            <div class="section-title-tag">Sección c</div>
+            <h2 class="section-title">Diagnóstico del problema</h2>
+          </div>
+        </div>
+
+        <h3 class="subhead mt-0"><span class="num">C.1</span> Falencias de infraestructura, riesgos e impacto</h3>
+        <div class="table-container">
+          <table class="custom-table compact">
+            <thead><tr><th>Falencia identificada</th><th>Riesgo operativo</th><th>Impacto en el negocio</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Red rígida</strong>: enrutadores y firewalls de hardware configurados equipo por equipo.</td><td>Cuellos de botella, cambios lentos, puntos únicos de falla.</td><td>Altos costos de mantenimiento; nuevos servicios tardan semanas en habilitarse.</td></tr>
+              <tr><td><strong>IoT rural desconectado</strong>: miles de sensores sin cobertura estable.</td><td>Lagunas de datos de humedad, temperatura y suelo.</td><td>Riego y cosecha “a ciegas”, pérdida de producto y de confianza del cliente.</td></tr>
+              <tr><td><strong>Telefonía análoga</strong> en sucursales.</td><td>Llamadas interurbanas con ruido, cortes y sin respaldo.</td><td>Coordinación logística lenta y costo alto por minuto de larga distancia.</td></tr>
+              <tr><td><strong>Nube fragmentada</strong>: servicios aislados en AWS y Azure.</td><td>Sin alta disponibilidad, rutas ineficientes, duplicidad.</td><td>Caídas de servicio, sobrecostos de nube y datos dispersos.</td></tr>
+              <tr><td><strong>Ceguera operativa y brechas de seguridad</strong>.</td><td>Fallas detectadas por los usuarios; accesos excesivos en la nube.</td><td>Mayor tiempo de reparación; riesgo de fuga de datos y sanciones (Ley 1581 de 2012).</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="subhead"><span class="num">C.2</span> Matriz de riesgos interactiva (impacto × probabilidad)</h3>
+        <p class="muted" style="margin-bottom: 14px;">Pulse cada riesgo para ver su efecto, el impacto en el negocio y la mitigación propuesta.</p>
+        <div class="risk-layout">
+          <div>
+            <div class="risk-matrix">
+              <div class="axis-y">IMPACTO</div>
+              <div class="mlabel">Alto</div>
+              <button class="rcell lv-med" data-risk="r7"><span class="rt">Caída de un proveedor de nube sin HA</span><span class="chip warn">Medio</span></button>
+              <button class="rcell lv-crit" data-risk="r1"><span class="rt">Acceso no autorizado en la nube</span><span class="chip bad">Crítico</span></button>
+              <button class="rcell lv-crit" data-risk="r2"><span class="rt">Pérdida de datos IoT rurales</span><span class="chip bad">Crítico</span></button>
+
+              <div class="mlabel">Medio</div>
+              <button class="rcell lv-low" data-risk="r6"><span class="rt">Falla del firewall físico (punto único)</span><span class="chip ok">Bajo</span></button>
+              <button class="rcell lv-med" data-risk="r5"><span class="rt">Ceguera operativa</span><span class="chip warn">Medio</span></button>
+              <button class="rcell lv-high" data-risk="r3"><span class="rt">Llamadas interurbanas deficientes</span><span class="chip brand">Alto</span></button>
+
+              <div class="mlabel">Bajo</div>
+              <div class="rcell empty"><span class="rt">—</span></div>
+              <button class="rcell lv-low" data-risk="r8"><span class="rt">Servicios duplicados AWS/Azure</span><span class="chip ok">Bajo</span></button>
+              <button class="rcell lv-med" data-risk="r4"><span class="rt">Sobrecosto de mantener hardware</span><span class="chip warn">Medio</span></button>
+
+              <div></div><div></div>
+              <div class="mlabel">Baja</div><div class="mlabel">Media</div><div class="mlabel">Alta</div>
+              <div></div><div></div>
+              <div class="axis-x">PROBABILIDAD</div>
+            </div>
+            <div class="legend"><span class="chip bad">Crítico</span><span class="chip brand">Alto</span><span class="chip warn">Medio</span><span class="chip ok">Bajo</span></div>
+          </div>
+
+          <div class="risk-panel" id="riskPanel" aria-live="polite">
+            <h4 id="riskTitle">Seleccione un riesgo</h4>
+            <dl>
+              <dt>Efecto operativo</dt><dd id="riskEffect">La matriz ubica los 8 riesgos derivados de las 5 falencias del caso.</dd>
+              <dt>Impacto en el negocio</dt><dd id="riskImpact">—</dd>
+              <dt>Mitigación propuesta</dt><dd id="riskMitig">—</dd>
+            </dl>
+            <p style="margin-top: 12px;"><a id="riskLink" href="#sec-diseno">Ver en el diseño →</a></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- d. FUNDAMENTACIÓN TEÓRICA -->
+      <section id="sec-teoria" class="section-card">
+        <div class="section-header">
+          <div>
+            <div class="section-title-tag">Sección d</div>
+            <h2 class="section-title">Fundamentación teórica</h2>
+          </div>
+        </div>
+        <p class="muted" style="margin-bottom: 16px;">Un tema por pestaña para no saturar la pantalla.</p>
+
+        <div class="theory-tabs" role="tablist" aria-label="Temas de la fundamentación">
+          <button class="tab-btn active" role="tab" aria-selected="true" data-tab="tab-redes"><span class="tn">01</span>Redes modernas (SDN/NFV)</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="tab-cloud"><span class="tn">02</span>Virtualización y cloud</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="tab-iot"><span class="tn">03</span>IoT LPWAN</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="tab-voip"><span class="tn">04</span>VoIP y UCaaS</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="tab-mon"><span class="tn">05</span>Monitoreo de redes</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="tab-qos"><span class="tn">06</span>QoS</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="tab-sec"><span class="tn">07</span>Seguridad</button>
+        </div>
+
+        <div id="tab-redes" class="tab-content active" role="tabpanel">
+          <h3>Justificación de las redes empresariales modernas</h3>
+          <p><strong>SDN</strong> separa el <em>plano de control</em> (quién decide las rutas) del <em>plano de datos</em> (quién reenvía los paquetes). Un controlador central programa los switches mediante protocolos como <strong>OpenFlow</strong>, o mediante políticas por aplicación como en <strong>Cisco ACI</strong> <span class="cite">(Stallings, 2016)</span>. <strong>NFV</strong> lleva firewalls, enrutadores y balanceadores a software sobre servidores estándar <span class="cite">(ETSI, 2012)</span>.</p>
+          <div class="grid-2">
+            <div class="info-card c-bad"><h4>Red tradicional</h4><ul><li>Cada equipo tiene su propio “cerebro” y se configura a mano.</li><li>Funciones atadas a hardware dedicado y costoso.</li><li>Escalar = comprar y transportar equipos.</li></ul></div>
+            <div class="info-card c-ok"><h4>Red moderna (SDN + NFV)</h4><ul><li>Visión y control centralizados desde una consola.</li><li>Funciones de red como software que se instancian en minutos.</li><li>Automatización por API y políticas uniformes en todas las sedes.</li></ul></div>
+          </div>
+        </div>
+
+        <div id="tab-cloud" class="tab-content" role="tabpanel">
+          <h3>Virtualización y cloud</h3>
+          <p>La virtualización abstrae el hardware: un hipervisor ejecuta varias máquinas virtuales y un motor de contenedores (<strong>Docker</strong>) empaqueta aplicaciones con sus dependencias. <strong>Kubernetes</strong> orquesta esos contenedores: los reparte, reinicia y escala automáticamente. En la nube, la red privada se define como <strong>VPC</strong> en AWS y <strong>VNet</strong> en Azure <span class="cite">(Amazon Web Services, 2024; Microsoft, 2024)</span>.</p>
+          <div class="table-container">
+            <table class="custom-table compact">
+              <thead><tr><th>Concepto</th><th>Máquina virtual</th><th>Contenedor</th></tr></thead>
+              <tbody>
+                <tr><td>Qué virtualiza</td><td>Hardware completo (incluye su propio SO)</td><td>Solo la aplicación; comparte el kernel</td></tr>
+                <tr><td>Arranque</td><td>Minutos</td><td>Segundos</td></tr>
+                <tr><td>Uso en AgroNet 360</td><td>Funciones de red NFV (vFirewall, vRouter)</td><td>Microservicios IoT, API, alertas, tableros</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout"><strong>Alta disponibilidad:</strong> cada servicio se despliega en al menos dos zonas de disponibilidad y con réplica entre AWS y Azure, de modo que ninguna falla individual detiene la operación.</div>
+        </div>
+
+        <div id="tab-iot" class="tab-content" role="tabpanel">
+          <h3>Redes LPWAN para sensores rurales</h3>
+          <p>Las redes de área amplia y bajo consumo (LPWAN) envían pocos datos a gran distancia con baterías que duran años. Comparación de las tres opciones del enunciado <span class="cite">(Mekki et al., 2019)</span>:</p>
+          <div class="table-container">
+            <table class="custom-table compact">
+              <thead><tr><th>Criterio</th><th>LoRaWAN</th><th>Sigfox</th><th>NB-IoT</th></tr></thead>
+              <tbody>
+                <tr><td>Espectro</td><td>Libre (915 MHz)</td><td>Libre</td><td>Licenciado (operador LTE)</td></tr>
+                <tr><td>Alcance rural</td><td>≈ 10–15 km</td><td>≈ 20–40 km</td><td>≈ 10 km (si hay cobertura)</td></tr>
+                <tr><td>Tasa de datos</td><td>0,3–50 kbps</td><td>100 bps, ≈ 140 mensajes/día</td><td>Hasta ≈ 200 kbps</td></tr>
+                <tr><td>¿Red propia?</td><td><span class="win">Sí, privada</span></td><td>No, depende del operador</td><td>No, depende del operador</td></tr>
+                <tr><td>Veredicto</td><td><span class="win">Elegida para cultivos</span></td><td>Descartada: poca cobertura y carga útil</td><td>Complemento en bodegas y vehículos</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout">Se elige <strong>LoRaWAN privada</strong> porque los cultivos están donde el operador celular no llega: la empresa instala sus propios gateways y no depende de un tercero. Las tramas van cifradas con AES-128 <span class="cite">(LoRa Alliance, 2020)</span>.</div>
+        </div>
+
+        <div id="tab-voip" class="tab-content" role="tabpanel">
+          <h3>Plataformas VoIP avanzadas</h3>
+          <div class="grid-3">
+            <div class="info-card c-tech"><h4>SIP y RTP</h4><p>SIP establece y termina las llamadas <span class="cite">(Rosenberg et al., 2002)</span>; RTP/SRTP transporta la voz cifrada.</p></div>
+            <div class="info-card"><h4>PBX virtual</h4><p>La central telefónica se ejecuta en la nube: extensiones, IVR, colas y grabación sin equipos en cada sede.</p></div>
+            <div class="info-card c-ok"><h4>SIP Trunking</h4><p>Conecta la PBX con la red pública (PSTN) por IP; reemplaza las líneas análogas y se contrata por canales.</p></div>
+          </div>
+          <div class="callout"><strong>UCaaS</strong> (Unified Communications as a Service) une voz, video, chat, presencia y conferencias en una sola plataforma por suscripción, accesible desde teléfono IP, PC o celular.</div>
+        </div>
+
+        <div id="tab-mon" class="tab-content" role="tabpanel">
+          <h3>Monitoreo de redes</h3>
+          <p>Monitorear es medir de forma continua el estado y el rendimiento de la red para actuar antes que el usuario note la falla. Se apoya en el modelo de gestión <strong>FCAPS</strong> (fallas, configuración, contabilidad, rendimiento y seguridad).</p>
+          <div class="grid-auto">
+            <div class="info-card c-tech"><h4>SNMPv3</h4><p>Consulta contadores de interfaces, CPU y memoria con autenticación y cifrado.</p></div>
+            <div class="info-card c-tech"><h4>NetFlow / IPFIX</h4><p>Muestra quién consume ancho de banda y con qué aplicación.</p></div>
+            <div class="info-card c-tech"><h4>Syslog y logs cloud</h4><p>Eventos de equipos, CloudTrail y Azure Monitor para auditoría y seguridad.</p></div>
+            <div class="info-card c-tech"><h4>Sondas activas</h4><p>Pruebas sintéticas (ping, SIP OPTIONS, HTTP) que miden la experiencia real.</p></div>
+          </div>
+        </div>
+
+        <div id="tab-qos" class="tab-content" role="tabpanel">
+          <h3>Calidad de servicio (QoS)</h3>
+          <p>QoS es el conjunto de mecanismos que dan trato preferente a ciertos tráficos. Con <strong>DiffServ</strong> cada paquete se marca con un valor DSCP <span class="cite">(Nichols et al., 1998)</span> y los equipos lo atienden según su clase: la voz (DSCP EF 46) va en una cola de prioridad estricta (LLQ).</p>
+          <div class="grid-auto">
+            <div class="info-card"><h4>Clasificar y marcar</h4><p>Identificar voz, video, IoT y datos, y etiquetarlos.</p></div>
+            <div class="info-card"><h4>Encolar</h4><p>Prioridad estricta para voz; ancho de banda garantizado al resto.</p></div>
+            <div class="info-card"><h4>Moldear y vigilar</h4><p>Shaping/policing para que ninguna aplicación acapare el enlace.</p></div>
+          </div>
+          <div class="callout">Umbrales de referencia para voz: latencia en un sentido ≤ 150 ms <span class="cite">(ITU-T, 2003)</span>, jitter ≤ 30 ms y pérdida ≤ 1 %. El análisis completo está en la <a href="#sec-qos">sección g</a>.</div>
+        </div>
+
+        <div id="tab-sec" class="tab-content" role="tabpanel">
+          <h3>Seguridad en telecomunicaciones</h3>
+          <div class="grid-auto">
+            <div class="info-card c-bad"><h4>Tríada CID</h4><p>Confidencialidad, integridad y disponibilidad de la información.</p></div>
+            <div class="info-card c-bad"><h4>Zero Trust</h4><p>“Nunca confiar, siempre verificar”: cada acceso se autentica y autoriza <span class="cite">(Rose et al., 2020)</span>.</p></div>
+            <div class="info-card c-bad"><h4>Defensa en profundidad</h4><p>Capas sucesivas: identidad, red, aplicación y datos.</p></div>
+            <div class="info-card c-bad"><h4>Responsabilidad compartida</h4><p>El proveedor asegura la nube; la empresa asegura lo que pone en ella (identidades, datos, configuración).</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- e. DISEÑO DE LA SOLUCIÓN -->
+      <section id="sec-diseno" class="section-card">
+        <div class="section-header">
+          <div>
+            <div class="section-title-tag">Sección e</div>
+            <h2 class="section-title">Diseño de la solución</h2>
+          </div>
+        </div>
+        <p style="margin-bottom: 16px;">Topología propuesta. <strong>Pulse cualquier componente</strong> para ver su función y justificación, y pruebe los escenarios <strong>Plan B</strong> para ver cómo responde la red ante fallas.</p>
+
+        <div class="topology-container">
+          <svg class="topo" id="topo" viewBox="0 0 1000 560" role="group" aria-label="Topología de la red propuesta">
+            <!-- Zonas -->
+            <rect class="zone" id="z-campo" x="12" y="14" width="246" height="270" rx="14" fill="#FF8A32" stroke="#FF8A32"/>
+            <text class="zlabel" x="26" y="36" style="fill:#FFAD70">CAMPO RURAL · IoT LPWAN</text>
+            <rect class="zone" id="z-suc" x="12" y="298" width="246" height="248" rx="14" fill="#8B9BFF" stroke="#8B9BFF"/>
+            <text class="zlabel" x="26" y="320" style="fill:#B3BEFF">SUCURSALES · VoIP</text>
+            <rect class="zone" id="z-core" x="415" y="14" width="232" height="532" rx="14" fill="#FF8A32" stroke="#FF8A32"/>
+            <text class="zlabel" x="429" y="36" style="fill:#FFAD70">SEDE CENTRAL · SDN + NFV</text>
+            <rect class="zone" id="z-aws" x="680" y="14" width="308" height="240" rx="14" fill="#FBBF24" stroke="#FBBF24"/>
+            <text class="zlabel" x="694" y="36" style="fill:#FCD27A">AWS · VPC 10.100.0.0/16</text>
+            <rect class="zone" id="z-azure" x="680" y="268" width="308" height="142" rx="14" fill="#38C8F0" stroke="#38C8F0"/>
+            <text class="zlabel" x="694" y="290" style="fill:#8FE2F8">AZURE · VNet 10.200.0.0/16</text>
+            <rect class="zone" id="z-ucaas" x="680" y="424" width="308" height="122" rx="14" fill="#34D399" stroke="#34D399"/>
+            <text class="zlabel" x="694" y="446" style="fill:#86EBC4">UCaaS · VOZ EN LA NUBE</text>
+
+            <!-- Enlaces de radio LoRa (sensores → gateways A y B) -->
+            <line class="lk radio" id="l-s1a" x1="84" y1="92" x2="148" y2="104"/>
+            <line class="lk radio" id="l-s2a" x1="84" y1="160" x2="148" y2="110"/>
+            <line class="lk radio" id="l-s3a" x1="84" y1="228" x2="148" y2="116"/>
+            <line class="lk radio" id="l-s1b" x1="84" y1="96" x2="148" y2="196"/>
+            <line class="lk radio" id="l-s2b" x1="84" y1="164" x2="148" y2="202"/>
+            <line class="lk radio" id="l-s3b" x1="84" y1="232" x2="148" y2="208"/>
+            <!-- Backhaul -->
+            <line class="lk flow" id="l-gwa" x1="242" y1="104" x2="298" y2="258"/>
+            <line class="lk flow" id="l-gwb" x1="242" y1="204" x2="290" y2="268"/>
+            <!-- Sucursales -->
+            <line class="lk" id="l-ph" x1="82" y1="384" x2="170" y2="424"/>
+            <line class="lk flow" id="l-br-main" x1="244" y1="436" x2="300" y2="322"/>
+            <line class="lk standby" id="l-br-lte" x1="244" y1="462" x2="330" y2="336"/>
+            <!-- WAN → sede -->
+            <line class="lk flow" id="l-wan-core" x1="396" y1="292" x2="438" y2="292"/>
+            <!-- Dentro de la sede -->
+            <line class="lk ctrl" id="l-ctrl" x1="531" y1="108" x2="531" y2="150"/>
+            <line class="lk" id="l-fab" x1="531" y1="202" x2="531" y2="262"/>
+            <line class="lk mon" id="l-mon" x1="531" y1="440" x2="531" y2="322"/>
+            <!-- Sede → nubes y UCaaS -->
+            <line class="lk flow" id="l-aws" x1="624" y1="276" x2="760" y2="222"/>
+            <line class="lk flow" id="l-azure" x1="624" y1="300" x2="760" y2="378"/>
+            <line class="lk flow" id="l-interc" x1="835" y1="236" x2="835" y2="358"/>
+            <line class="lk flow" id="l-voz" x1="610" y1="322" x2="720" y2="458"/>
+            <line class="lk flow" id="l-trunk1" x1="805" y1="472" x2="865" y2="472"/>
+            <line class="lk standby" id="l-trunk2" x1="805" y1="494" x2="865" y2="494"/>
+
+            <!-- Etiquetas de enlaces -->
+            <text class="llabel" x="150" y="160">LoRa 915 MHz</text>
+            <text class="llabel" x="263" y="168">4G / satelital</text>
+            <text class="llabel" x="256" y="404">Fibra</text>
+            <text class="llabel" x="296" y="420">4G respaldo</text>
+            <text class="llabel" x="540" y="133">OpenFlow</text>
+            <text class="llabel" x="540" y="390">SNMPv3 · NetFlow</text>
+            <text class="llabel" x="652" y="236">IPsec · BGP</text>
+            <text class="llabel" x="652" y="352">IPsec · BGP</text>
+            <text class="llabel" x="842" y="263">Réplica</text>
+            <text class="llabel" x="640" y="420">SIP / SRTP</text>
+
+            <!-- Nodos campo -->
+            <g class="node-element" data-node="sens" tabindex="0" role="button" aria-label="Sensores IoT LoRaWAN">
+              <circle cx="64" cy="92" r="19" stroke="#FF8A32"/><text x="64" y="96" text-anchor="middle">S1</text>
+              <circle cx="64" cy="160" r="19" stroke="#FF8A32"/><text x="64" y="164" text-anchor="middle">S2</text>
+              <circle cx="64" cy="228" r="19" stroke="#FF8A32"/><text x="64" y="232" text-anchor="middle">S3</text>
+              <text class="sub" x="64" y="268" text-anchor="middle">Sensores</text>
+            </g>
+            <g class="node-element" id="n-gwa" data-node="gw" tabindex="0" role="button" aria-label="Gateway LoRaWAN A">
+              <rect x="148" y="84" width="94" height="44" rx="8" stroke="#FF8A32"/>
+              <text x="195" y="103" text-anchor="middle">Gateway A</text><text class="sub" x="195" y="118" text-anchor="middle">LoRaWAN</text>
+            </g>
+            <g class="node-element" id="n-gwb" data-node="gw" tabindex="0" role="button" aria-label="Gateway LoRaWAN B">
+              <rect x="148" y="184" width="94" height="44" rx="8" stroke="#FF8A32"/>
+              <text x="195" y="203" text-anchor="middle">Gateway B</text><text class="sub" x="195" y="218" text-anchor="middle">LoRaWAN</text>
+            </g>
+
+            <!-- Nodos sucursales -->
+            <g class="node-element" data-node="phones" tabindex="0" role="button" aria-label="Teléfonos IP">
+              <rect x="30" y="336" width="104" height="46" rx="8" stroke="#8B9BFF"/>
+              <text x="82" y="356" text-anchor="middle">Teléfonos IP</text><text class="sub" x="82" y="371" text-anchor="middle">softphones · VLAN 20</text>
+            </g>
+            <g class="node-element" id="n-ucpe" data-node="ucpe" tabindex="0" role="button" aria-label="uCPE de sucursal">
+              <rect x="140" y="424" width="104" height="50" rx="8" stroke="#8B9BFF"/>
+              <text x="192" y="445" text-anchor="middle">uCPE SD-WAN</text><text class="sub" x="192" y="461" text-anchor="middle">vFirewall (NFV)</text>
+            </g>
+            <text class="sub" x="30" y="528">Plantilla única para N sucursales</text>
+
+            <!-- WAN -->
+            <g class="node-element" id="n-wan" data-node="wan" tabindex="0" role="button" aria-label="SD-WAN">
+              <ellipse cx="336" cy="292" rx="60" ry="44" stroke="#38C8F0"/>
+              <text x="336" y="289" text-anchor="middle">SD-WAN</text><text class="sub" x="336" y="304" text-anchor="middle">Internet + MPLS + 4G</text>
+            </g>
+
+            <!-- Sede central -->
+            <g class="node-element" data-node="sdn" tabindex="0" role="button" aria-label="Controlador SDN">
+              <rect x="438" y="56" width="186" height="52" rx="8" stroke="#8B9BFF"/>
+              <text x="531" y="79" text-anchor="middle">Controlador SDN</text><text class="sub" x="531" y="95" text-anchor="middle">clúster x3 · OpenFlow / ACI</text>
+            </g>
+            <g class="node-element" data-node="fabric" tabindex="0" role="button" aria-label="Fabric de switches">
+              <rect x="438" y="150" width="186" height="52" rx="8" stroke="#FF8A32"/>
+              <text x="531" y="173" text-anchor="middle">Fabric OpenFlow</text><text class="sub" x="531" y="189" text-anchor="middle">spine-leaf · VLAN / VRF</text>
+            </g>
+            <g class="node-element" id="n-nfv" data-node="nfv" tabindex="0" role="button" aria-label="Funciones virtualizadas NFV">
+              <rect x="438" y="262" width="186" height="60" rx="8" stroke="#FF8A32"/>
+              <text x="531" y="287" text-anchor="middle">NFV · vFW · vRouter</text><text class="sub" x="531" y="304" text-anchor="middle">vBalanceador · servidores x86</text>
+            </g>
+            <g class="node-element" data-node="noc" tabindex="0" role="button" aria-label="Centro de monitoreo NOC">
+              <rect x="438" y="440" width="186" height="60" rx="8" stroke="#38C8F0"/>
+              <text x="531" y="465" text-anchor="middle">NOC · PRTG + Splunk</text><text class="sub" x="531" y="482" text-anchor="middle">monitoreo y SIEM 24/7</text>
+            </g>
+
+            <!-- AWS -->
+            <g class="node-element" id="n-waf" data-node="waf" tabindex="0" role="button" aria-label="AWS WAF">
+              <rect x="694" y="50" width="136" height="44" rx="8" stroke="#FBBF24"/>
+              <text x="762" y="69" text-anchor="middle">AWS WAF + ALB</text><text class="sub" x="762" y="84" text-anchor="middle">subred pública</text>
+            </g>
+            <g class="node-element" id="n-eks" data-node="eks" tabindex="0" role="button" aria-label="Amazon EKS">
+              <rect x="840" y="50" width="136" height="44" rx="8" stroke="#FBBF24"/>
+              <text x="908" y="69" text-anchor="middle">Amazon EKS</text><text class="sub" x="908" y="84" text-anchor="middle">microservicios Docker</text>
+            </g>
+            <g class="node-element" id="n-iot" data-node="iot" tabindex="0" role="button" aria-label="AWS IoT Core for LoRaWAN">
+              <rect x="694" y="118" width="136" height="44" rx="8" stroke="#FBBF24"/>
+              <text x="762" y="137" text-anchor="middle">IoT Core LoRaWAN</text><text class="sub" x="762" y="152" text-anchor="middle">servidor de red</text>
+            </g>
+            <g class="node-element" id="n-data" data-node="data" tabindex="0" role="button" aria-label="Analítica y almacenamiento">
+              <rect x="840" y="118" width="136" height="44" rx="8" stroke="#FBBF24"/>
+              <text x="908" y="137" text-anchor="middle">Analítica · S3</text><text class="sub" x="908" y="152" text-anchor="middle">subred de datos</text>
+            </g>
+            <g class="node-element" id="n-tgw" data-node="tgw" tabindex="0" role="button" aria-label="AWS Transit Gateway">
+              <rect x="760" y="194" width="150" height="42" rx="8" stroke="#FBBF24"/>
+              <text x="835" y="213" text-anchor="middle">Transit Gateway</text><text class="sub" x="835" y="227" text-anchor="middle">hub de enrutamiento</text>
+            </g>
+
+            <!-- Azure -->
+            <g class="node-element" id="n-entra" data-node="entra" tabindex="0" role="button" aria-label="Microsoft Entra ID">
+              <rect x="694" y="300" width="136" height="44" rx="8" stroke="#38C8F0"/>
+              <text x="762" y="319" text-anchor="middle">Entra ID</text><text class="sub" x="762" y="334" text-anchor="middle">IAM · RBAC · MFA</text>
+            </g>
+            <g class="node-element" id="n-aks" data-node="aks" tabindex="0" role="button" aria-label="Azure AKS">
+              <rect x="840" y="300" width="136" height="44" rx="8" stroke="#38C8F0"/>
+              <text x="908" y="319" text-anchor="middle">Azure AKS</text><text class="sub" x="908" y="334" text-anchor="middle">ERP · réplica crítica</text>
+            </g>
+            <g class="node-element" id="n-vwan" data-node="vwan" tabindex="0" role="button" aria-label="Azure Virtual WAN">
+              <rect x="760" y="358" width="150" height="42" rx="8" stroke="#38C8F0"/>
+              <text x="835" y="377" text-anchor="middle">Virtual WAN</text><text class="sub" x="835" y="391" text-anchor="middle">VPN Gateway</text>
+            </g>
+
+            <!-- UCaaS -->
+            <g class="node-element" id="n-pbx" data-node="pbx" tabindex="0" role="button" aria-label="PBX virtual">
+              <rect x="694" y="458" width="111" height="50" rx="8" stroke="#34D399"/>
+              <text x="749" y="479" text-anchor="middle">PBX virtual</text><text class="sub" x="749" y="495" text-anchor="middle">UCaaS</text>
+            </g>
+            <g class="node-element" id="n-trunk" data-node="trunk" tabindex="0" role="button" aria-label="SIP Trunking">
+              <rect x="865" y="458" width="111" height="50" rx="8" stroke="#34D399"/>
+              <text x="920" y="479" text-anchor="middle">SIP Trunk</text><text class="sub" x="920" y="495" text-anchor="middle">operador A + B</text>
+            </g>
+          </svg>
+        </div>
+        <div class="topo-legend">
+          <span><i style="border-color:#FF8A32; border-top-style:dashed"></i>Radio LoRa</span>
+          <span><i style="border-color:#5C6577"></i>Datos IP</span>
+          <span><i style="border-color:#8B9BFF; border-top-style:dotted"></i>Plano de control</span>
+          <span><i style="border-color:#38C8F0; border-top-style:dotted"></i>Monitoreo</span>
+          <span><i style="border-color:#38C8F0; border-top-width:3px"></i>Ruta de respaldo activa</span>
+          <span><i style="border-color:#F87171; border-top-style:dashed"></i>Falla</span>
+        </div>
+
+        <div class="topo-tools" role="group" aria-label="Escenarios Plan B">
+          <span class="lbl">Plan B</span>
+          <button class="filter-btn active" data-scn="normal">Operación normal</button>
+          <button class="filter-btn" data-scn="wan">Falla enlace de sucursal</button>
+          <button class="filter-btn" data-scn="aws">Caída región AWS</button>
+          <button class="filter-btn" data-scn="lora">Falla gateway LoRaWAN</button>
+          <button class="filter-btn" data-scn="sip">Falla operador SIP</button>
+        </div>
+        <div class="plan-box" id="planBox" aria-live="polite"><strong id="planTitle">Operación normal</strong><span id="planText"></span></div>
+
+        <h3 class="subhead"><span class="num">E.1</span> Arquitectura y segmentación</h3>
+        <p style="margin-bottom: 14px;">Arquitectura en cuatro capas: <strong>borde</strong> (campo y sucursales), <strong>transporte</strong> (SD-WAN), <strong>núcleo</strong> (SDN + NFV en la sede) y <strong>nube</strong> (AWS + Azure en hub-and-spoke, más UCaaS). El direccionamiento no se superpone entre sitios para permitir el enrutamiento entre todos ellos.</p>
+        <div class="table-container">
+          <table class="custom-table compact">
+            <thead><tr><th>Segmento</th><th>VLAN</th><th>Red</th><th>Uso</th><th>Política de acceso</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Gestión</strong></td><td>99</td><td><code>10.10.99.0/24</code></td><td>Equipos de red, controlador SDN</td><td>Solo NOC y administradores con MFA</td></tr>
+              <tr><td><strong>Usuarios</strong></td><td>10</td><td><code>10.10.10.0/23</code></td><td>Computadores y portátiles</td><td>Internet y aplicaciones cloud autorizadas</td></tr>
+              <tr><td><strong>Voz IP</strong></td><td>20</td><td><code>10.10.20.0/24</code></td><td>Teléfonos IP y softphones</td><td>Solo hacia la PBX; marcado DSCP EF</td></tr>
+              <tr><td><strong>IoT / OT</strong></td><td>30</td><td><code>10.10.32.0/22</code></td><td>Gateways LoRaWAN y módems NB-IoT</td><td>Solo hacia el servidor de red (TLS)</td></tr>
+              <tr><td><strong>Servidores / DMZ</strong></td><td>40</td><td><code>10.10.40.0/24</code></td><td>Servicios locales publicados</td><td>Detrás del vFirewall y del WAF</td></tr>
+              <tr><td><strong>Invitados</strong></td><td>50</td><td><code>10.10.50.0/24</code></td><td>Wi-Fi de visitantes</td><td>Solo Internet; aislada del resto</td></tr>
+              <tr><td><strong>Sucursales</strong></td><td>mismas</td><td><code>10.20.N.0/22</code></td><td>Una /22 por sede con las mismas VLAN</td><td>Plantilla SD-WAN común</td></tr>
+              <tr><td><strong>AWS VPC</strong></td><td>—</td><td><code>10.100.0.0/16</code></td><td>Subredes pública (WAF/ALB), privada (EKS) y de datos</td><td>Security Groups + NACL</td></tr>
+              <tr><td><strong>Azure VNet</strong></td><td>—</td><td><code>10.200.0.0/16</code></td><td>AKS, ERP, servicios corporativos</td><td>Network Security Groups</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="subhead"><span class="num">E.2</span> Servicios de red</h3>
+        <div class="grid-3">
+          <div class="info-card c-tech">
+            <h4>DHCP</h4>
+            <ul>
+              <li>Servidor central con <strong>failover</strong> activo/pasivo.</li>
+              <li>Un ámbito por VLAN; en cada VLAN y sucursal un <strong>relay</strong> (<span class="mono">ip helper</span>) reenvía las solicitudes.</li>
+              <li>Reservas fijas para gateways IoT; opción 66 para que los teléfonos IP descarguen su configuración.</li>
+              <li>En la nube, el DHCP lo gestionan la VPC y la VNet.</li>
+            </ul>
+          </div>
+          <div class="info-card c-tech">
+            <h4>DNS</h4>
+            <ul>
+              <li>Zona interna <span class="mono">agrologistics.internal</span> con <strong>split-horizon</strong> (respuesta distinta dentro y fuera).</li>
+              <li>Route 53 Resolver y Azure Private DNS reenvían consultas entre nubes.</li>
+              <li>DNS público con <strong>health checks</strong> para conmutar de nube ante fallas.</li>
+              <li>Registros SRV para descubrir el servicio SIP.</li>
+            </ul>
+          </div>
+          <div class="info-card c-tech">
+            <h4>Enrutamiento</h4>
+            <ul>
+              <li>En la sede, el <strong>controlador SDN</strong> calcula las rutas y las instala en los switches.</li>
+              <li>En la WAN, <strong>SD-WAN</strong> elige el enlace por aplicación (la voz va por el de menor jitter).</li>
+              <li>Hacia la nube, <strong>BGP</strong> sobre túneles IPsec con Transit Gateway y Virtual WAN.</li>
+              <li>Salida a Internet siempre a través del vFirewall.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 class="subhead"><span class="num">E.3</span> Integración tecnológica: cloud y virtualización</h3>
+        <div class="grid-2">
+          <div class="info-card">
+            <h4>NFV en la sede y en sucursales</h4>
+            <p>El firewall, el enrutador y el balanceador se ejecutan como funciones virtuales (VNF) sobre servidores x86; en cada sucursal, un <strong>uCPE</strong> ejecuta el SD-WAN y el vFirewall. Más capacidad significa levantar otra instancia, no comprar otro equipo.</p>
+          </div>
+          <div class="info-card c-tech">
+            <h4>Multinube hub-and-spoke</h4>
+            <p><strong>AWS</strong> aloja la plataforma IoT y analítica; <strong>Azure</strong>, las aplicaciones corporativas y la identidad. Transit Gateway y Virtual WAN son los “hubs” y se enlazan con IPsec + BGP: los servicios dejan de estar aislados.</p>
+          </div>
+        </div>
+        <div class="table-container" style="margin-top: 16px;">
+          <table class="custom-table compact">
+            <thead><tr><th>Microservicio (contenedor Docker)</th><th>Función</th><th>Dónde corre</th><th>Escalado en Kubernetes</th></tr></thead>
+            <tbody>
+              <tr><td><code>ingesta-iot</code></td><td>Recibe lecturas del servidor LoRaWAN y las valida</td><td>EKS (réplica en AKS)</td><td>Autoescalado según mensajes por segundo</td></tr>
+              <tr><td><code>api-telemetria</code></td><td>Expone datos de cultivos a apps y clientes</td><td>EKS, detrás del WAF</td><td>Autoescalado por CPU</td></tr>
+              <tr><td><code>alertas</code></td><td>Avisa heladas, sequía o fallas de sensores</td><td>EKS (réplica en AKS)</td><td>Mínimo 2 réplicas</td></tr>
+              <tr><td><code>tablero-web</code></td><td>Panel para agrónomos y gerencia</td><td>EKS</td><td>Despliegue sin caída (rolling update)</td></tr>
+              <tr><td><code>integracion-erp</code></td><td>Lleva cosechas y despachos al ERP</td><td>AKS</td><td>Mínimo 2 réplicas</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="subhead"><span class="num">E.4</span> Seguridad: control de acceso y segmentación</h3>
+        <div class="grid-auto">
+          <div class="info-card c-bad"><h4>Microsegmentación SDN</h4><p>El controlador aplica listas blancas por grupo: un gateway IoT solo puede hablar con el servidor de red, nunca con el ERP.</p></div>
+          <div class="info-card c-bad"><h4>802.1X + NAC</h4><p>Cada dispositivo se autentica al conectarse y recibe su VLAN automáticamente.</p></div>
+          <div class="info-card c-bad"><h4>Security Groups / NSG</h4><p>Firewalls por instancia en la nube con reglas mínimas por puerto y origen.</p></div>
+          <div class="info-card c-bad"><h4>Acceso administrativo</h4><p>Solo por VPN de confianza cero, con MFA y desde la VLAN de gestión. Detalle en la <a href="#sec-seguridad">sección h</a>.</p></div>
+        </div>
+      </section>
+
+      <!-- f. MONITOREO -->
+      <section id="sec-monitoreo" class="section-card">
+        <div class="section-header">
+          <div>
+            <div class="section-title-tag">Sección f</div>
+            <h2 class="section-title">Estrategia de monitoreo de red</h2>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="info-card c-tech">
+            <h4>¿Qué se monitorea?</h4>
+            <ul>
+              <li><strong>Enlaces WAN/SD-WAN:</strong> disponibilidad, latencia, jitter, pérdida, uso de ancho de banda.</li>
+              <li><strong>Equipos y VNF:</strong> controlador SDN, switches, vFirewall (CPU, memoria, sesiones).</li>
+              <li><strong>Voz:</strong> MOS, registro SIP, canales del troncal.</li>
+              <li><strong>IoT:</strong> gateways en línea, RSSI/SNR, batería y última lectura de cada sensor.</li>
+              <li><strong>Nube:</strong> estado de VPC/VNet, nodos Kubernetes, costos.</li>
+              <li><strong>Seguridad:</strong> eventos WAF, inicios de sesión fallidos, cambios en IAM.</li>
+            </ul>
+          </div>
+          <div class="info-card">
+            <h4>¿Cómo se monitorea?</h4>
+            <ul>
+              <li><strong>PRTG</strong> con sensores SNMPv3, Ping, NetFlow, QoS de ida y vuelta, SIP OPTIONS, HTTP y sensores de Amazon CloudWatch y Microsoft Azure.</li>
+              <li><strong>Splunk</strong> como SIEM: recibe syslog, logs del WAF, CloudTrail y Azure Activity, y correlaciona eventos.</li>
+              <li>Telemetría del controlador SDN y del servidor LoRaWAN.</li>
+              <li>Sondeo cada 60 s; alertas escalonadas por correo, chat y SMS al NOC 24/7.</li>
+            </ul>
+          </div>
+          <div class="info-card c-ok">
+            <h4>¿Por qué es importante para AgroLogistics?</h4>
+            <ul>
+              <li>Elimina la <strong>ceguera operativa</strong>: la falla se ve antes de que el usuario llame.</li>
+              <li>Un sensor caído en temporada seca puede costar una cosecha: hay que saberlo en minutos.</li>
+              <li>Comprueba que la voz cumple los umbrales de QoS.</li>
+              <li>Detecta ataques y sobrecostos de nube a tiempo.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 class="subhead"><span class="num">F.1</span> Umbrales del semáforo</h3>
+        <div class="table-container">
+          <table class="custom-table compact">
+            <thead><tr><th>Indicador</th><th><span class="chip ok">Verde</span></th><th><span class="chip warn">Amarillo</span></th><th><span class="chip bad">Rojo</span></th><th>Herramienta</th></tr></thead>
+            <tbody>
+              <tr><td>Latencia WAN</td><td>≤ 100 ms</td><td>100–150 ms</td><td>&gt; 150 ms</td><td>PRTG · QoS / Ping</td></tr>
+              <tr><td>Jitter VoIP</td><td>≤ 30 ms</td><td>30–50 ms</td><td>&gt; 50 ms</td><td>PRTG · QoS</td></tr>
+              <tr><td>Pérdida de paquetes</td><td>≤ 1 %</td><td>1–3 %</td><td>&gt; 3 %</td><td>PRTG · QoS</td></tr>
+              <tr><td>Sensores IoT en línea</td><td>≥ 97 %</td><td>90–97 %</td><td>&lt; 90 %</td><td>Servidor LoRaWAN → PRTG</td></tr>
+              <tr><td>CPU del vFirewall</td><td>≤ 70 %</td><td>70–85 %</td><td>&gt; 85 %</td><td>PRTG · SNMPv3</td></tr>
+              <tr><td>Peticiones bloqueadas por WAF</td><td>≤ 80/min</td><td>80–200/min</td><td>&gt; 200/min</td><td>Splunk</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="subhead"><span class="num">F.2</span> Tablero de ejemplo (datos simulados)</h3>
+        <div class="dash">
+          <div class="dash-top">
+            <span class="live">NOC AGRONET 360 · EN VIVO</span>
+            <button class="btn-main" id="btnIncident">⚠ Simular incidente</button>
+          </div>
+          <div class="dash-grid" id="dashGrid"></div>
+          <div class="dash-log" id="dashLog" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- g. QoS -->
+      <section id="sec-qos" class="section-card">
+        <div class="section-header">
+          <div>
+            <div class="section-title-tag">Sección g</div>
+            <h2 class="section-title">Análisis de calidad de servicio (QoS)</h2>
+          </div>
+        </div>
+
+        <div class="qos-cards">
+          <div class="info-card c-tech">
+            <h4>Latencia</h4>
+            <div class="metric">≤ 150 ms</div>
+            <p>Tiempo que tarda la voz de un extremo a otro. Por encima de 150 ms los interlocutores se interrumpen <span class="cite">(ITU-T, 2003)</span>. En el caso, el backhaul satelital de fincas sirve para IoT, pero no para voz.</p>
+          </div>
+          <div class="info-card c-violet">
+            <h4>Jitter</h4>
+            <div class="metric">≤ 30 ms</div>
+            <p>Variación del retardo entre paquetes. Produce voz entrecortada; el buffer del teléfono lo absorbe a costa de más latencia. La cola de prioridad y SD-WAN lo reducen.</p>
+          </div>
+          <div class="info-card c-bad">
+            <h4>Pérdida de paquetes</h4>
+            <div class="metric">≤ 1 %</div>
+            <p>En voz no hay retransmisión: el paquete perdido es una sílaba perdida. En IoT LoRaWAN se tolera mejor porque las lecturas se repiten cada pocos minutos.</p>
+          </div>
+          <div class="info-card c-ok">
+            <h4>Throughput</h4>
+            <div class="metric">≈ 87 kbps / llamada</div>
+            <p>Caudal real que necesita cada llamada G.711 con cabeceras IP/UDP/RTP y Ethernet; G.729 baja a ≈ 31 kbps. Define cuántas llamadas simultáneas soporta cada sucursal.</p>
+          </div>
+        </div>
+
+        <h3 class="subhead"><span class="num">G.1</span> Política de QoS aplicada (DiffServ)</h3>
+        <div class="table-container">
+          <table class="custom-table compact">
+            <thead><tr><th>Clase</th><th>Tráfico</th><th>DSCP</th><th>Tratamiento</th><th>Reserva</th></tr></thead>
+            <tbody>
+              <tr><td><span class="chip bad">1</span></td><td>Voz (RTP)</td><td><code>EF (46)</code></td><td>Cola de prioridad estricta (LLQ)</td><td>≤ 33 %</td></tr>
+              <tr><td><span class="chip brand">2</span></td><td>Señalización SIP</td><td><code>CS3 (24)</code></td><td>Ancho de banda garantizado</td><td>5 %</td></tr>
+              <tr><td><span class="chip warn">3</span></td><td>Videollamadas UCaaS</td><td><code>AF41 (34)</code></td><td>Garantizado, descarte bajo</td><td>20 %</td></tr>
+              <tr><td><span class="chip tech">4</span></td><td>Telemetría IoT y alertas</td><td><code>AF21 (18)</code></td><td>Garantizado; tolera latencia</td><td>10 %</td></tr>
+              <tr><td><span class="chip ok">5</span></td><td>ERP y aplicaciones de negocio</td><td><code>AF31 (26)</code></td><td>Garantizado</td><td>20 %</td></tr>
+              <tr><td><span class="chip">6</span></td><td>Navegación y resto</td><td><code>BE (0)</code></td><td>Mejor esfuerzo</td><td>Restante</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="subhead"><span class="num">G.2</span> Simulador: ¿cómo suena la llamada?</h3>
+        <p class="muted" style="margin-bottom: 14px;">Mueva los controles. El MOS (1 a 5) se estima con una versión simplificada del Modelo E <span class="cite">(ITU-T, 2015)</span>.</p>
+        <div class="qos-simulator">
+          <div class="sim-controls">
+            <div class="control-group">
+              <div class="control-label"><span>Latencia (ms)</span><span id="valLatency">45 ms</span></div>
+              <input type="range" id="sliderLatency" min="0" max="400" value="45" class="sim-slider" aria-label="Latencia en milisegundos">
+            </div>
+            <div class="control-group">
+              <div class="control-label"><span>Jitter (ms)</span><span id="valJitter">12 ms</span></div>
+              <input type="range" id="sliderJitter" min="0" max="100" value="12" class="sim-slider" aria-label="Jitter en milisegundos">
+            </div>
+            <div class="control-group">
+              <div class="control-label"><span>Pérdida de paquetes (%)</span><span id="valPacketLoss">0.5 %</span></div>
+              <input type="range" id="sliderPacketLoss" min="0" max="15" step="0.1" value="0.5" class="sim-slider" aria-label="Pérdida de paquetes en porcentaje">
+            </div>
+            <div class="param-status" id="paramStatus"></div>
+          </div>
+
+          <div class="sim-results">
+            <div class="traffic">
+              <div class="traffic-light" aria-hidden="true">
+                <div class="tl r" id="tlR"></div><div class="tl y" id="tlY"></div><div class="tl g" id="tlG"></div>
+              </div>
+              <div>
+                <span style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .1em;">MOS estimado</span>
+                <div id="mosScore" class="mos-score-badge">4.34</div>
+                <div id="mosStatus" class="mos-status-indicator" aria-live="polite">Buena</div>
+              </div>
+            </div>
+            <p id="mosHint" class="muted" style="font-size: .82rem; margin-top: 14px;"></p>
+          </div>
+        </div>
+
+        <h3 class="subhead"><span class="num">G.3</span> Calculadora de throughput para VoIP</h3>
+        <div class="calc">
+          <label>Códec
+            <select id="codec">
+              <option value="87.2">G.711 (64 kbps → 87,2 kbps)</option>
+              <option value="31.2">G.729 (8 kbps → 31,2 kbps)</option>
+              <option value="87.2">G.722 HD (64 kbps → 87,2 kbps)</option>
+            </select>
+          </label>
+          <label>Llamadas simultáneas
+            <input type="number" id="calls" min="1" max="500" value="30">
+          </label>
+          <label>Enlace de la sucursal
+            <select id="link">
+              <option value="10">10 Mbps</option>
+              <option value="20" selected>20 Mbps</option>
+              <option value="50">50 Mbps</option>
+              <option value="100">100 Mbps</option>
+            </select>
+          </label>
+          <div class="calc-out">
+            <div class="muted" style="font-size: .75rem; font-weight: 800; letter-spacing: .1em;">THROUGHPUT DE VOZ</div>
+            <div class="big" id="bwOut">2,62 Mbps</div>
+            <div class="bar"><span id="bwBar"></span></div>
+            <div id="bwMsg" style="font-size: .8rem;"></div>
+          </div>
+        </div>
+        <p class="table-note muted" style="font-size: .78rem; margin-top: 8px;">Valores por sentido con paquetes de 20 ms. Regla de diseño: la voz no debe superar el 33 % del enlace para no asfixiar al resto del tráfico.</p>
+      </section>
+
+      <!-- h. SEGURIDAD -->
+      <section id="sec-seguridad" class="section-card">
+        <div class="section-header">
+          <div>
+            <div class="section-title-tag">Sección h</div>
+            <h2 class="section-title">Seguridad en la infraestructura</h2>
+          </div>
+        </div>
+
+        <h3 class="subhead mt-0"><span class="num">H.1</span> Riesgos identificados → mitigación</h3>
+        <p class="muted" style="margin-bottom: 16px;">Pulse cada tarjeta para voltearla.</p>
+        <div class="flip-grid">
+          <div class="flip-card" tabindex="0" role="button" aria-label="Riesgo: accesos excesivos en la nube">
+            <div class="flip-card-inner">
+              <div class="flip-card-front"><div><span class="ic">🔑</span><h4 style="color: var(--accent-rose); margin-bottom: 8px;">Accesos excesivos en la nube</h4><p style="font-size: 0.85rem; color: var(--text-muted);">Cuentas compartidas, usuarios con permisos de administrador y sin MFA en AWS y Azure.</p></div><div class="card-hint">Ver mitigación ➔</div></div>
+              <div class="flip-card-back"><div><h4 style="margin-bottom: 8px;">IAM + RBAC + MFA</h4><p style="font-size: 0.85rem;">Identidad única con Entra ID y SSO hacia AWS; roles con mínimo privilegio, MFA obligatorio y revisión trimestral de permisos.</p></div></div>
+            </div>
+          </div>
+          <div class="flip-card" tabindex="0" role="button" aria-label="Riesgo: ataques a aplicaciones web">
+            <div class="flip-card-inner">
+              <div class="flip-card-front"><div><span class="ic">🌐</span><h4 style="color: var(--accent-rose); margin-bottom: 8px;">Ataques a portales y APIs</h4><p style="font-size: 0.85rem; color: var(--text-muted);">Inyección SQL, XSS, bots y DDoS contra el portal de clientes y la API de telemetría.</p></div><div class="card-hint">Ver mitigación ➔</div></div>
+              <div class="flip-card-back"><div><h4 style="margin-bottom: 8px;">WAF en capa 7</h4><p style="font-size: 0.85rem;">AWS WAF y Azure Front Door WAF con reglas OWASP Top 10, limitación de tasa, control de bots y bloqueo geográfico.</p></div></div>
+            </div>
+          </div>
+          <div class="flip-card" tabindex="0" role="button" aria-label="Riesgo: sensores suplantados">
+            <div class="flip-card-inner">
+              <div class="flip-card-front"><div><span class="ic">📟</span><h4 style="color: var(--accent-rose); margin-bottom: 8px;">Sensores suplantados</h4><p style="font-size: 0.85rem; color: var(--text-muted);">Un dispositivo falso envía datos alterados de humedad o temperatura.</p></div><div class="card-hint">Ver mitigación ➔</div></div>
+              <div class="flip-card-back"><div><h4 style="margin-bottom: 8px;">Activación OTAA y cifrado</h4><p style="font-size: 0.85rem;">Claves únicas por sensor (AES-128), registro previo en el servidor de red y VLAN IoT aislada.</p></div></div>
+            </div>
+          </div>
+          <div class="flip-card" tabindex="0" role="button" aria-label="Riesgo: fraude telefónico">
+            <div class="flip-card-inner">
+              <div class="flip-card-front"><div><span class="ic">☎️</span><h4 style="color: var(--accent-rose); margin-bottom: 8px;">Fraude telefónico SIP</h4><p style="font-size: 0.85rem; color: var(--text-muted);">Extensiones robadas para hacer llamadas internacionales a cargo de la empresa.</p></div><div class="card-hint">Ver mitigación ➔</div></div>
+              <div class="flip-card-back"><div><h4 style="margin-bottom: 8px;">SIP seguro</h4><p style="font-size: 0.85rem;">TLS + SRTP, contraseñas robustas, bloqueo de destinos internacionales no autorizados y límite de gasto diario.</p></div></div>
+            </div>
+          </div>
+          <div class="flip-card" tabindex="0" role="button" aria-label="Riesgo: movimiento lateral">
+            <div class="flip-card-inner">
+              <div class="flip-card-front"><div><span class="ic">🕸️</span><h4 style="color: var(--accent-rose); margin-bottom: 8px;">Movimiento lateral</h4><p style="font-size: 0.85rem; color: var(--text-muted);">Un equipo infectado en una sucursal salta a los servidores en una red plana.</p></div><div class="card-hint">Ver mitigación ➔</div></div>
+              <div class="flip-card-back"><div><h4 style="margin-bottom: 8px;">Microsegmentación</h4><p style="font-size: 0.85rem;">VLAN por función, políticas SDN de lista blanca y vFirewall entre segmentos.</p></div></div>
+            </div>
+          </div>
+          <div class="flip-card" tabindex="0" role="button" aria-label="Riesgo: configuraciones erróneas en la nube">
+            <div class="flip-card-inner">
+              <div class="flip-card-front"><div><span class="ic">☁️</span><h4 style="color: var(--accent-rose); margin-bottom: 8px;">Nube mal configurada</h4><p style="font-size: 0.85rem; color: var(--text-muted);">Almacenamiento público por error, puertos abiertos a Internet, sin registro de cambios.</p></div><div class="card-hint">Ver mitigación ➔</div></div>
+              <div class="flip-card-back"><div><h4 style="margin-bottom: 8px;">Gobierno y auditoría</h4><p style="font-size: 0.85rem;">Infraestructura como código revisada, CloudTrail y Azure Policy activos, alertas en Splunk ante cambios críticos.</p></div></div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="subhead"><span class="num">H.2</span> IAM: control de acceso basado en roles (RBAC)</h3>
+        <div class="table-container">
+          <table class="custom-table compact">
+            <thead><tr><th>Rol</th><th>Puede</th><th>No puede</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Operador NOC</strong></td><td>Ver tableros y alertas, reconocer incidentes</td><td>Cambiar configuraciones</td></tr>
+              <tr><td><strong>Ingeniero de red</strong></td><td>Modificar políticas SDN, SD-WAN y QoS</td><td>Gestionar usuarios o facturación de nube</td></tr>
+              <tr><td><strong>Administrador cloud</strong></td><td>Gestionar VPC/VNet, Kubernetes y Security Groups</td><td>Leer datos de negocio sin aprobación</td></tr>
+              <tr><td><strong>Agrónomo</strong></td><td>Consultar datos de sus cultivos</td><td>Acceder a la consola de red o de nube</td></tr>
+              <tr><td><strong>Auditor</strong></td><td>Leer registros y reportes</td><td>Modificar cualquier recurso</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note muted" style="font-size: .78rem; margin-top: 8px;">Los permisos privilegiados se activan solo por tiempo limitado y con aprobación (acceso justo a tiempo).</p>
+
+        <h3 class="subhead"><span class="num">H.3</span> Buenas prácticas · lista de verificación</h3>
+        <div class="check-head">
+          <span style="font-weight: 800;">Cumplimiento: <span id="checkCount">0/10</span></span>
+          <div class="bar"><span id="checkBar"></span></div>
+        </div>
+        <div class="checklist" id="checklist">
+          <label class="check-item"><input type="checkbox">MFA obligatorio en todas las cuentas</label>
+          <label class="check-item"><input type="checkbox">Principio de mínimo privilegio y revisión periódica</label>
+          <label class="check-item"><input type="checkbox">Cifrado en tránsito (TLS 1.3, IPsec) y en reposo</label>
+          <label class="check-item"><input type="checkbox">Parches y firmware al día en VNF y gateways</label>
+          <label class="check-item"><input type="checkbox">Registros centralizados en Splunk por 12 meses</label>
+          <label class="check-item"><input type="checkbox">Copias de seguridad probadas y réplica entre nubes</label>
+          <label class="check-item"><input type="checkbox">Segmentación por VLAN y microsegmentación SDN</label>
+          <label class="check-item"><input type="checkbox">Reglas WAF revisadas tras cada incidente</label>
+          <label class="check-item"><input type="checkbox">Capacitación anual contra phishing</label>
+          <label class="check-item"><input type="checkbox">Plan de respuesta a incidentes ensayado</label>
+        </div>
+      </section>
+
+      <!-- i. INNOVACIÓN -->
+      <section id="sec-innovacion" class="section-card">
+        <div class="section-header">
+          <div>
+            <div class="section-title-tag">Sección i</div>
+            <h2 class="section-title">Innovación tecnológica</h2>
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="innov-card" style="--c: var(--tech);">
+            <span class="ic">☁️</span>
+            <h4>Cloud computing</h4>
+            <p>Convierte la infraestructura en un servicio que se paga por uso y crece en minutos.</p>
+            <h5>Impacto en el diseño</h5>
+            <ul><li>Unifica AWS y Azure bajo una sola arquitectura.</li><li>Alta disponibilidad entre regiones y nubes (Plan B).</li><li>Kubernetes escala en temporada de cosecha.</li><li>Pasa de inversión en equipos (CapEx) a gasto operativo (OpEx).</li></ul>
+          </div>
+          <div class="innov-card" style="--c: var(--brand);">
+            <span class="ic">🌾</span>
+            <h4>IoT con LPWAN</h4>
+            <p>Lleva conectividad a donde no llega el operador, con baterías que duran años.</p>
+            <h5>Impacto en el diseño</h5>
+            <ul><li>Gateways propios con cobertura solapada eliminan las desconexiones.</li><li>Datos continuos para agricultura de precisión.</li><li>Alertas tempranas de helada, sequía o plagas.</li><li>Costo por sensor bajo: permite desplegar miles.</li></ul>
+          </div>
+          <div class="innov-card" style="--c: var(--tech-2);">
+            <span class="ic">🧠</span>
+            <h4>SDN</h4>
+            <p>Hace la red programable: se gestiona como software, no equipo por equipo.</p>
+            <h5>Impacto en el diseño</h5>
+            <ul><li>Cambios y nuevas sucursales con plantillas en minutos.</li><li>Microsegmentación para seguridad.</li><li>QoS dinámico: prioriza voz o alertas según la situación.</li><li>Reemplaza hardware dedicado gracias a NFV.</li></ul>
+          </div>
+        </div>
+        <h3 class="subhead"><span class="num">SINERGIA</span> Las tres tecnologías trabajando juntas</h3>
+        <div class="flowline">
+          <span>🌡️ Sensor detecta helada</span><b>→</b>
+          <span>📡 LoRaWAN la transmite</span><b>→</b>
+          <span>☁️ Microservicio en la nube genera alerta</span><b>→</b>
+          <span>🧠 SDN prioriza el tráfico de alerta</span><b>→</b>
+          <span>☎️ UCaaS llama al agrónomo</span>
+        </div>
+      </section>
+
+      <!-- j. DISCUSIÓN -->
+      <section id="sec-discusion" class="section-card">
+        <div class="section-header">
+          <div>
+            <div class="section-title-tag">Sección j</div>
+            <h2 class="section-title">Discusión</h2>
+          </div>
+        </div>
+
+        <h3 class="subhead mt-0"><span class="num">J.1</span> Red tradicional vs. propuesta AgroNet 360</h3>
+        <div class="filter-btn-group" role="group" aria-label="Filtrar por criterio">
+          <button class="filter-btn active" data-filter="all">Todos</button>
+          <button class="filter-btn" data-filter="perf">Rendimiento</button>
+          <button class="filter-btn" data-filter="cost">Costos</button>
+          <button class="filter-btn" data-filter="sec">Seguridad</button>
+          <button class="filter-btn" data-filter="ops">Operación</button>
+        </div>
+        <div class="table-container">
+          <table class="custom-table" id="compTable">
+            <thead><tr><th>Criterio</th><th>Red tradicional (actual)</th><th>Propuesta AgroNet 360</th></tr></thead>
+            <tbody>
+              <tr data-cat="ops"><td><strong>Flexibilidad</strong></td><td>Configuración manual equipo por equipo</td><td class="win">Políticas centralizadas en el controlador SDN</td></tr>
+              <tr data-cat="ops"><td><strong>Nueva sucursal</strong></td><td>Semanas: compra, envío e instalación de equipos</td><td class="win">Días: uCPE con plantilla SD-WAN</td></tr>
+              <tr data-cat="perf"><td><strong>Cobertura IoT rural</strong></td><td>Intermitente, depende del operador</td><td class="win">LoRaWAN privada con gateways redundantes</td></tr>
+              <tr data-cat="perf"><td><strong>Calidad de voz</strong></td><td>Análoga, ruido en llamadas interurbanas</td><td class="win">VoIP con QoS EF; MOS objetivo ≥ 4,0</td></tr>
+              <tr data-cat="perf"><td><strong>Disponibilidad</strong></td><td>Puntos únicos de falla</td><td class="win">Enlaces de respaldo y multinube</td></tr>
+              <tr data-cat="cost"><td><strong>Modelo de costos</strong></td><td>CapEx alto en hardware y mantenimiento</td><td class="win">OpEx por suscripción y pago por uso</td></tr>
+              <tr data-cat="cost"><td><strong>Llamadas entre sedes</strong></td><td>Cobro por minuto de larga distancia</td><td class="win">Internas sin costo sobre la red IP</td></tr>
+              <tr data-cat="sec"><td><strong>Control de acceso</strong></td><td>Cuentas compartidas, sin MFA</td><td class="win">IAM/RBAC, MFA y SSO</td></tr>
+              <tr data-cat="sec"><td><strong>Protección web</strong></td><td>Firewall perimetral de capa 3/4</td><td class="win">WAF de capa 7 + microsegmentación</td></tr>
+              <tr data-cat="ops"><td><strong>Visibilidad</strong></td><td>Reactiva: el usuario reporta la falla</td><td class="win">Proactiva: PRTG + Splunk 24/7</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="grid-2" style="margin-top: 24px;">
+          <div class="info-card c-ok">
+            <h4>J.2 Ventajas de la propuesta</h4>
+            <ul class="pro-list">
+              <li><strong>Agilidad:</strong> la red se adapta por software.</li>
+              <li><strong>Continuidad:</strong> respaldo en enlaces, gateways, nubes y operadores SIP.</li>
+              <li><strong>Datos del campo:</strong> conectividad estable para miles de sensores.</li>
+              <li><strong>Comunicación unificada:</strong> voz, video y chat en todas las sedes.</li>
+              <li><strong>Seguridad por capas:</strong> identidad, red y aplicación.</li>
+            </ul>
+          </div>
+          <div class="info-card c-warn">
+            <h4>J.3 Posibles limitaciones</h4>
+            <ul class="con-list">
+              <li><strong>Inversión inicial y migración:</strong> requiere hacerlo por fases y convivir un tiempo con la red antigua.</li>
+              <li><strong>Curva de aprendizaje:</strong> SDN, Kubernetes y nube exigen capacitar al personal.</li>
+              <li><strong>Dependencia de proveedores</strong> de nube y de Internet; riesgo de quedar atado a uno.</li>
+              <li><strong>LoRaWAN tiene baja tasa de datos:</strong> no sirve para video y necesita gateways elevados.</li>
+              <li><strong>Backhaul satelital</strong> con alta latencia: apto para IoT, no para voz.</li>
+              <li><strong>Complejidad multinube:</strong> dos consolas y costos de transferencia que exigen control (FinOps).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- k. CONCLUSIONES -->
+      <section id="sec-conclusiones" class="section-card">
+        <div class="section-header">
+          <div>
+            <div class="section-title-tag">Sección k</div>
+            <h2 class="section-title">Conclusiones</h2>
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="concl-card">
+            <h4>🛠️ Reflexión técnica</h4>
+            <ul>
+              <li>Los problemas del caso no son aislados: una red rígida, sin visibilidad y sin seguridad se refuerzan entre sí. Por eso la solución debe ser integral.</li>
+              <li>Separar control y datos (SDN) y llevar funciones a software (NFV) es la base que permite todo lo demás.</li>
+              <li>Cada tecnología se eligió por el contexto: LoRaWAN por la geografía rural y UCaaS por la dispersión de sucursales.</li>
+            </ul>
+          </div>
+          <div class="concl-card">
+            <h4>🏢 Impacto en la organización</h4>
+            <ul>
+              <li>Decisiones agrícolas basadas en datos continuos y no en suposiciones.</li>
+              <li>Sucursales coordinadas con comunicación de calidad.</li>
+              <li>Menor dependencia de hardware y mantenimiento costoso.</li>
+              <li>Menor riesgo de fuga de datos y de interrupciones del negocio.</li>
+            </ul>
+          </div>
+          <div class="concl-card">
+            <h4>🎓 Aprendizajes del equipo</h4>
+            <ul>
+              <li>Aprendimos a justificar cada decisión técnica con el problema del negocio, no solo con la tecnología de moda.</li>
+              <li>Entendimos que QoS se mide con números concretos (latencia, jitter, pérdida, throughput).</li>
+              <li>Comprendimos que la seguridad y el monitoreo se diseñan desde el inicio, no se agregan al final.</li>
+              <li>Trabajar en equipo nos obligó a integrar visiones distintas en un solo diseño coherente.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- l. REFERENCIAS APA 7 -->
+      <section id="sec-ref" class="section-card">
+        <div class="section-header">
+          <div>
+            <div class="section-title-tag">Sección l</div>
+            <h2 class="section-title">Referencias (APA 7)</h2>
+          </div>
+        </div>
+        <ul class="apa-list">
+          <li>Amazon Web Services. (2024). <em>What is Amazon VPC?</em> Amazon VPC User Guide. https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html</li>
+          <li>European Telecommunications Standards Institute. (2012). <em>Network functions virtualisation: An introduction, benefits, enablers, challenges &amp; call for action</em> [White paper]. ETSI.</li>
+          <li>International Telecommunication Union. (2003). <em>One-way transmission time</em> (ITU-T Recommendation G.114). ITU.</li>
+          <li>International Telecommunication Union. (2015). <em>The E-model: A computational model for use in transmission planning</em> (ITU-T Recommendation G.107). ITU.</li>
+          <li>Kurose, J. F., &amp; Ross, K. W. (2021). <em>Computer networking: A top-down approach</em> (8th ed.). Pearson.</li>
+          <li>LoRa Alliance. (2020). <em>LoRaWAN L2 1.0.4 specification</em> (TS001-1.0.4). LoRa Alliance.</li>
+          <li>Mekki, K., Bajic, E., Chaxel, F., &amp; Meyer, F. (2019). A comparative study of LPWAN technologies for large-scale IoT deployment. <em>ICT Express, 5</em>(1), 1–7. https://doi.org/10.1016/j.icte.2017.12.005</li>
+          <li>Microsoft. (2024). <em>What is Azure Virtual Network?</em> Microsoft Learn. https://learn.microsoft.com/azure/virtual-network/virtual-networks-overview</li>
+          <li>Nichols, K., Blake, S., Baker, F., &amp; Black, D. (1998). <em>Definition of the Differentiated Services Field (DS Field) in the IPv4 and IPv6 headers</em> (RFC 2474). IETF. https://doi.org/10.17487/RFC2474</li>
+          <li>OWASP Foundation. (2021). <em>OWASP Top 10:2021</em>. https://owasp.org/Top10/</li>
+          <li>Rose, S., Borchert, O., Mitchell, S., &amp; Connelly, S. (2020). <em>Zero trust architecture</em> (NIST Special Publication 800-207). National Institute of Standards and Technology. https://doi.org/10.6028/NIST.SP.800-207</li>
+          <li>Rosenberg, J., Schulzrinne, H., Camarillo, G., Johnston, A., Peterson, J., Sparks, R., Handley, M., &amp; Schooler, E. (2002). <em>SIP: Session Initiation Protocol</em> (RFC 3261). IETF. https://doi.org/10.17487/RFC3261</li>
+          <li>Stallings, W. (2016). <em>Foundations of modern networking: SDN, NFV, QoE, IoT, and cloud</em>. Addison-Wesley.</li>
+          <li>Tanenbaum, A. S., &amp; Wetherall, D. J. (2012). <em>Redes de computadoras</em> (5.ª ed.). Pearson Educación.</li>
+        </ul>
+      </section>
+
+      <!-- ★ MINI-QUIZ (valoración adicional) -->
+      <section id="sec-bonus" class="section-card">
+        <div class="section-header">
+          <div>
+            <div class="section-title-tag">Valoración adicional</div>
+            <h2 class="section-title">Mini-quiz de repaso</h2>
+          </div>
+        </div>
+        <div class="quiz-container" id="quiz"></div>
+      </section>
+
+      <footer class="page-footer">AgroNet 360 · Informe técnico interactivo · Actualización en Telecomunicaciones · 2026</footer>
+    </main>
+  </div>
+
+  <!-- Modal de componentes de la topología -->
+  <div class="modal-overlay" id="nodeModal">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
+      <button class="modal-close" id="modalClose" aria-label="Cerrar detalle">✕</button>
+      <h3 id="modalTitle" style="color: var(--brand); margin-bottom: 8px; padding-right: 30px;"></h3>
+      <span class="chip tech" id="modalTech"></span>
+      <h5>Función</h5><p id="modalFunc"></p>
+      <h5>Justificación</h5><p id="modalJust"></p>
+    </div>
+  </div>
+
+<script>
+  const $ = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+  const fmt = (n, d = 0) => n.toLocaleString('es-CO', { minimumFractionDigits: d, maximumFractionDigits: d });
+
+  /* ---------- Menú móvil ---------- */
+  const sidebar = $('#sidebar'), menuToggle = $('#menuToggle'), backdrop = $('#menuBackdrop');
+  function setMenu(open) {
+    sidebar.classList.toggle('open', open);
+    backdrop.classList.toggle('visible', open);
+    menuToggle.setAttribute('aria-expanded', String(open));
+  }
+  menuToggle.addEventListener('click', () => setMenu(!sidebar.classList.contains('open')));
+  backdrop.addEventListener('click', () => setMenu(false));
+  $$('.nav-item').forEach(a => a.addEventListener('click', () => setMenu(false)));
+
+  /* ---------- Tema claro / oscuro ---------- */
+  const themeToggle = $('#themeToggle'), themeLabel = $('#themeLabel');
+  function applyTheme(theme) {
+    document.body.setAttribute('data-theme', theme);
+    themeLabel.textContent = theme === 'dark' ? 'Modo blanco' : 'Modo oscuro';
+    themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Activar modo blanco' : 'Activar modo oscuro');
+  }
+  let savedTheme = 'dark';
+  try { savedTheme = localStorage.getItem('agro-theme') || 'dark'; } catch (e) {}
+  applyTheme(savedTheme === 'light' ? 'light' : 'dark');
+  themeToggle.addEventListener('click', () => {
+    const theme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(theme);
+    try { localStorage.setItem('agro-theme', theme); } catch (e) {}
+  });
+
+  /* ---------- Fondo: red de nodos animada ---------- */
+  (function () {
+    const cv = document.getElementById('bgNet'), ctx = cv.getContext('2d');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const mouse = { x: -999, y: -999 };
+    let W = 0, H = 0, pts = [];
+    function size() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth; H = window.innerHeight;
+      cv.width = W * dpr; cv.height = H * dpr;
+      cv.style.width = W + 'px'; cv.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const n = Math.round(Math.min(110, Math.max(35, W * H / 15000)));
+      pts = Array.from({ length: n }, () => ({
+        x: Math.random() * W, y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35,
+        r: Math.random() * 2 + 1, c: Math.random() < 0.6 ? 0 : 1, p: Math.random() * 6.28
+      }));
+    }
+    function frame(t) {
+      const light = document.body.getAttribute('data-theme') === 'light';
+      const cols = light ? ['199,90,10', '3,120,166'] : ['255,138,50', '56,200,240'];
+      const D = 150;
+      ctx.clearRect(0, 0, W, H);
+      ctx.lineWidth = 0.8;
+      for (let i = 0; i < pts.length; i++) {
+        const a = pts[i];
+        if (!reduce) {
+          a.x += a.vx; a.y += a.vy;
+          if (a.x < 0 || a.x > W) a.vx *= -1;
+          if (a.y < 0 || a.y > H) a.vy *= -1;
+        }
+        for (let j = i + 1; j < pts.length; j++) {
+          const b = pts[j], dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy;
+          if (d2 < D * D) {
+            ctx.strokeStyle = 'rgba(' + cols[a.c] + ',' + ((1 - Math.sqrt(d2) / D) * (light ? 0.3 : 0.5)) + ')';
+            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+          }
+        }
+        const md = Math.hypot(a.x - mouse.x, a.y - mouse.y);
+        if (md < 180) {
+          ctx.strokeStyle = 'rgba(' + cols[1] + ',' + ((1 - md / 180) * 0.55) + ')';
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+        }
+        const glow = 0.6 + 0.4 * Math.sin((t || 0) / 700 + a.p);
+        ctx.fillStyle = 'rgba(' + cols[a.c] + ',' + ((light ? 0.5 : 0.9) * glow) + ')';
+        ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, 6.283); ctx.fill();
+      }
+      if (!reduce) requestAnimationFrame(frame);
+    }
+    window.addEventListener('resize', () => { size(); if (reduce) frame(0); });
+    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+    themeToggle.addEventListener('click', () => { if (reduce) frame(0); });
+    size();
+    requestAnimationFrame(frame);
+  })();
+
+  /* ---------- Progreso de lectura y menú activo ---------- */
+  const sections = $$('main section');
+  function onScroll() {
+    const h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    $('#readProgress').style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+    if (navLock) return;
+    let current = sections[0].id;
+    sections.forEach(s => { if (s.getBoundingClientRect().top <= 130) current = s.id; });
+    if (max > 0 && h.scrollTop >= max - 4) current = sections[sections.length - 1].id;
+    markNav(current);
+  }
+  function markNav(current) {
+    $$('.nav-item').forEach(a => {
+      const on = a.getAttribute('href') === '#' + current;
+      a.classList.toggle('active', on);
+      if (on) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+    });
+  }
+  /* Al pulsar un enlace del menú, esa pestaña queda marcada hasta que el usuario vuelva a desplazarse */
+  let navLock = false;
+  $$('.nav-item').forEach(a => a.addEventListener('click', () => {
+    navLock = true;
+    markNav(a.getAttribute('href').slice(1));
+  }));
+  ['wheel', 'touchmove', 'keydown', 'mousedown'].forEach(ev =>
+    window.addEventListener(ev, e => { if (!(ev === 'mousedown' && e.target.closest('.nav-item'))) navLock = false; }, { passive: true }));
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ---------- Teclado para elementos con role=button que no son <button> ---------- */
+  document.addEventListener('keydown', e => {
+    const el = e.target;
+    if ((e.key === 'Enter' || e.key === ' ') && el.matches && el.matches('[role="button"]:not(button)')) {
+      e.preventDefault();
+      el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    }
+  });
+
+  /* ---------- c. Matriz de riesgos ---------- */
+  const riskData = {
+    r1: { t: 'Acceso no autorizado en la nube', lvl: 'Crítico', e: 'Cuentas sin MFA y permisos excesivos permiten entrar a AWS o Azure y modificar o extraer información.', i: 'Fuga de datos de clientes y cultivos, sanciones por la Ley 1581 de 2012 y daño reputacional.', m: 'IAM centralizado con Entra ID, RBAC con mínimo privilegio, MFA obligatorio y WAF delante de las aplicaciones.', l: '#sec-seguridad' },
+    r2: { t: 'Pérdida de datos IoT rurales', lvl: 'Crítico', e: 'Sensores en cultivos lejanos pierden conexión y dejan huecos en las mediciones.', i: 'Riego y cosecha sin información; pérdida de producto en heladas o sequías.', m: 'Red LoRaWAN privada con gateways de cobertura solapada y backhaul 4G/satelital; NB-IoT donde haya operador.', l: '#sec-diseno' },
+    r3: { t: 'Llamadas interurbanas deficientes', lvl: 'Alto', e: 'Telefonía análoga con ruido, cortes y retardo entre sucursales.', i: 'Coordinación logística lenta, errores en despachos y alto costo por minuto.', m: 'UCaaS con PBX virtual, SIP Trunking con dos operadores y QoS DSCP EF para la voz.', l: '#sec-qos' },
+    r4: { t: 'Sobrecosto de mantener hardware', lvl: 'Medio', e: 'Enrutadores y firewalls físicos requieren contratos de soporte, repuestos y visitas técnicas.', i: 'Presupuesto de TI consumido en mantenimiento en lugar de innovación.', m: 'NFV y uCPE: funciones de red como software sobre servidores estándar.', l: '#sec-diseno' },
+    r5: { t: 'Ceguera operativa', lvl: 'Medio', e: 'No hay diagnóstico en tiempo real; las fallas se descubren cuando el usuario las reporta.', i: 'Tiempo de reparación alto; amplifica el efecto de todos los demás riesgos.', m: 'PRTG para rendimiento y disponibilidad, Splunk como SIEM y NOC 24/7 con semáforo de umbrales.', l: '#sec-monitoreo' },
+    r6: { t: 'Falla del firewall físico', lvl: 'Bajo', e: 'Un único firewall de hardware concentra todo el tráfico: si falla, se cae la sede.', i: 'Interrupción total de servicios mientras llega el repuesto.', m: 'vFirewall en clúster (NFV) que se recrea en minutos en otro servidor.', l: '#sec-diseno' },
+    r7: { t: 'Caída de un proveedor de nube', lvl: 'Medio', e: 'Los servicios en AWS o Azure no tienen réplica ni conmutación.', i: 'Plataforma IoT o ERP detenidos durante horas.', m: 'Multinube hub-and-spoke, réplica de microservicios críticos y conmutación por DNS (ver Plan B).', l: '#sec-diseno' },
+    r8: { t: 'Servicios duplicados AWS/Azure', lvl: 'Bajo', e: 'Cada área creó sus propios recursos en nubes distintas sin coordinación.', i: 'Pago doble por los mismos servicios y datos dispersos.', m: 'Arquitectura multinube con roles definidos por nube, etiquetado de recursos y control de costos (FinOps).', l: '#sec-diseno' }
+  };
+  $$('.rcell[data-risk]').forEach(btn => btn.addEventListener('click', () => {
+    const r = riskData[btn.dataset.risk];
+    $('#riskTitle').textContent = r.t + ' · ' + r.lvl;
+    $('#riskEffect').textContent = r.e;
+    $('#riskImpact').textContent = r.i;
+    $('#riskMitig').textContent = r.m;
+    $('#riskLink').setAttribute('href', r.l);
+    $$('.rcell[data-risk]').forEach(b => { b.classList.toggle('selected', b === btn); b.setAttribute('aria-pressed', String(b === btn)); });
+  }));
+
+  /* ---------- d. Pestañas ---------- */
+  $$('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
+    $$('.tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+    $$('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  }));
+
+  /* ---------- e. Topología: componentes ---------- */
+  const nodeData = {
+    sens: ['Sensores IoT LoRaWAN', 'LoRa · 915 MHz · AES-128', 'Miden humedad del suelo, temperatura, lluvia y nivel de tanques. Envían tramas pequeñas (decenas de bytes) cada 10–15 minutos.', 'Funcionan años con batería y alcanzan unos 10–15 km en campo abierto: justo lo que necesitan cultivos lejanos sin cobertura celular.'],
+    gw: ['Gateways LoRaWAN A y B', 'Cobertura solapada · backhaul 4G / satelital', 'Reciben por radio las tramas de todos los sensores a su alcance y las reenvían por IP al servidor de red en la nube.', 'En LoRaWAN un sensor no se asocia a un solo gateway: si uno falla, el otro sigue recibiendo. Se instalan en torres o silos para mejorar la línea de vista.'],
+    wan: ['SD-WAN (red superpuesta)', 'Internet + MPLS + 4G · túneles IPsec', 'Une sede, sucursales, campo y nubes con túneles cifrados y elige en tiempo real el mejor enlace para cada aplicación.', 'Reemplaza los enrutadores configurados a mano: las políticas se definen una vez y se aplican a todas las sedes. Envía la voz por el enlace con menor jitter.'],
+    phones: ['Teléfonos IP y softphones', 'SIP · SRTP · VLAN 20', 'Terminales de voz de las sucursales (teléfono de escritorio o aplicación en PC y celular) registradas en la PBX virtual.', 'Sustituyen la telefonía análoga: la llamada entre sucursales viaja como datos priorizados y sin cargos de larga distancia.'],
+    ucpe: ['uCPE de sucursal', 'SD-WAN + vFirewall (NFV)', 'Equipo universal x86 que ejecuta como software el enrutador SD-WAN y el firewall de la sucursal.', 'Una sola caja configurable a distancia en lugar de enrutador, firewall y equipos dedicados: menos hardware y menos visitas técnicas.'],
+    sdn: ['Controlador SDN', 'Clúster de 3 nodos · OpenFlow / Cisco ACI', 'Cerebro de la red: calcula rutas, aplica segmentación y QoS y programa los switches.', 'Separa el plano de control del de datos; un cambio que antes tomaba días se aplica en minutos. En clúster para no ser punto único de falla.'],
+    fabric: ['Fabric de switches OpenFlow', 'Spine-leaf · VLAN / VRF', 'Plano de datos de la sede: reenvía los paquetes según las tablas de flujo que instala el controlador.', 'Switches de hardware genérico, más económicos; la inteligencia está en el software.'],
+    nfv: ['Funciones de red virtualizadas (NFV)', 'vFirewall · vRouter · vBalanceador', 'Firewall, enrutador y balanceador ejecutados como máquinas virtuales sobre servidores x86 estándar.', 'Elimina los firewalls de hardware que hoy son cuello de botella: si el tráfico crece, se levanta otra instancia en minutos (ETSI, 2012).'],
+    noc: ['NOC · Centro de monitoreo', 'PRTG + Splunk · 24/7', 'PRTG sondea enlaces, equipos, voz, IoT y nube; Splunk centraliza y correlaciona los registros de seguridad.', 'Acaba con la ceguera operativa: las fallas se detectan antes de que el usuario llame. Ver sección f.'],
+    waf: ['AWS WAF + Application Load Balancer', 'Capa 7 · reglas OWASP Top 10', 'Filtra las peticiones al portal de clientes y a las APIs antes de que lleguen a los microservicios.', 'Bloquea inyección SQL, XSS, bots y picos de tráfico malicioso contra la API de telemetría.'],
+    eks: ['Amazon EKS · microservicios', 'Docker + Kubernetes', 'Ejecuta en contenedores los servicios de ingesta IoT, API, alertas y tableros.', 'Escala automáticamente en temporada de cosecha y se actualiza sin interrupciones.'],
+    iot: ['AWS IoT Core for LoRaWAN', 'Servidor de red LoRaWAN administrado', 'Recibe las tramas de los gateways, elimina duplicados, las descifra y entrega los datos a los microservicios.', 'Servicio administrado: no hay que mantener servidores propios para la red LoRaWAN.'],
+    data: ['Analítica y almacenamiento', 'Amazon S3 · base de series de tiempo', 'Guarda el histórico de sensores para modelos de riego y predicción de cosecha.', 'Almacenamiento elástico y cifrado; los datos del campo dejan de estar dispersos.'],
+    tgw: ['AWS Transit Gateway', 'Hub de enrutamiento · BGP', 'Punto central que conecta la VPC con la sede (VPN IPsec) y con Azure.', 'Topología hub-and-spoke: una conexión por sitio en lugar de una malla de túneles difícil de mantener.'],
+    entra: ['Microsoft Entra ID', 'IAM · RBAC · MFA · SSO', 'Identidad única para todos los empleados, con MFA, en aplicaciones y consolas de AWS y Azure.', 'Resuelve la falta de políticas de acceso: cada rol ve solo lo que necesita (mínimo privilegio).'],
+    aks: ['Azure AKS · aplicaciones corporativas', 'Kubernetes · ERP / CRM', 'Aloja las aplicaciones administrativas y la réplica de los microservicios críticos.', 'Unifica lo que hoy está aislado en Azure y da alta disponibilidad entre nubes (Plan B).'],
+    vwan: ['Azure Virtual WAN / VPN Gateway', 'IPsec · BGP', 'Conecta la VNet con la sede y con el Transit Gateway de AWS.', 'Une ambas nubes con enrutamiento dinámico: si un camino cae, BGP retira la ruta automáticamente.'],
+    pbx: ['PBX virtual (UCaaS)', 'Voz · video · chat · presencia', 'Central telefónica en la nube: extensiones, IVR, colas, grabación y videollamadas para todas las sucursales.', 'Reemplaza las centrales análogas: plan de marcación único, llamadas internas sin costo y alta disponibilidad del proveedor.'],
+    trunk: ['SIP Trunking', 'Dos operadores · SIP / SRTP', 'Conecta la PBX virtual con la red telefónica pública mediante canales SIP sobre IP.', 'Elimina las líneas análogas físicas; los canales se contratan según la demanda y el segundo operador sirve de respaldo.']
+  };
+  const modal = $('#nodeModal');
+  let lastFocus = null;
+  function openModal(key) {
+    const d = nodeData[key];
+    lastFocus = document.activeElement;
+    $('#modalTitle').textContent = d[0];
+    $('#modalTech').textContent = d[1];
+    $('#modalFunc').textContent = d[2];
+    $('#modalJust').textContent = d[3];
+    modal.classList.add('active');
+    $('#modalClose').focus();
+  }
+  function closeModal() {
+    if (!modal.classList.contains('active')) return;
+    modal.classList.remove('active');
+    if (lastFocus) lastFocus.focus();
+  }
+  $$('.node-element').forEach(n => n.addEventListener('click', () => openModal(n.dataset.node)));
+  $('#modalClose').addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeModal(); setMenu(false); }
+    if (e.key === 'Tab' && modal.classList.contains('active')) { e.preventDefault(); $('#modalClose').focus(); }
+  });
+
+  /* ---------- e. Plan B ---------- */
+  const scenarios = {
+    normal: { down: [], backup: [], t: 'Operación normal', x: 'Todos los enlaces activos. SD-WAN reparte el tráfico por aplicación, los gateways A y B reciben a los mismos sensores y AWS y Azure replican datos de forma continua.' },
+    wan: { down: ['l-br-main'], backup: ['l-br-lte', 'n-ucpe'], t: 'Falla del enlace principal de una sucursal', x: 'El SD-WAN detecta la pérdida en menos de un segundo y conmuta al enlace 4G. Las llamadas continúan porque la voz conserva la prioridad EF; PRTG registra la alerta y se abre un ticket al proveedor.' },
+    aws: { down: ['z-aws', 'l-aws', 'l-interc', 'n-waf', 'n-eks', 'n-iot', 'n-data', 'n-tgw'], backup: ['z-azure', 'l-azure', 'n-aks', 'n-vwan'], t: 'Caída de la región de AWS', x: 'Los health checks de DNS detectan la falla y dirigen el tráfico a las réplicas de los microservicios en Azure AKS. Objetivo de diseño: recuperar el servicio en ≤ 15 min (RTO) perdiendo ≤ 5 min de datos (RPO).' },
+    lora: { down: ['n-gwa', 'l-s1a', 'l-s2a', 'l-s3a', 'l-gwa'], backup: ['n-gwb', 'l-s1b', 'l-s2b', 'l-s3b', 'l-gwb'], t: 'Falla del gateway LoRaWAN A', x: 'Los sensores no necesitan reconfigurarse: el gateway B, con cobertura solapada, sigue recibiendo sus tramas. El servidor de red ya descartaba los duplicados, así que no se pierden datos.' },
+    sip: { down: ['l-trunk1'], backup: ['l-trunk2', 'n-trunk'], t: 'Falla del operador SIP principal', x: 'La PBX virtual envía las llamadas externas por el troncal del operador B. Las llamadas internas entre sucursales no se afectan porque no salen a la red pública.' }
+  };
+  function setScenario(key) {
+    const s = scenarios[key];
+    $$('#topo .is-down, #topo .is-backup').forEach(el => el.classList.remove('is-down', 'is-backup'));
+    s.down.forEach(id => document.getElementById(id).classList.add('is-down'));
+    s.backup.forEach(id => document.getElementById(id).classList.add('is-backup'));
+    $('#planTitle').textContent = (key === 'normal' ? '✅ ' : '⚠️ ') + s.t;
+    $('#planText').textContent = s.x;
+    $('#planBox').classList.toggle('alert', key !== 'normal');
+    $$('[data-scn]').forEach(b => b.classList.toggle('active', b.dataset.scn === key));
+  }
+  $$('[data-scn]').forEach(b => b.addEventListener('click', () => setScenario(b.dataset.scn)));
+  setScenario('normal');
+
+  /* ---------- f. Tablero de monitoreo ---------- */
+  const metrics = [
+    { k: 'lat', n: 'Latencia WAN sede ↔ nube', u: 'ms', b: 38, z: 5, d: 0, dir: 'low', w: 100, r: 150 },
+    { k: 'jit', n: 'Jitter VoIP', u: 'ms', b: 9, z: 2.5, d: 0, dir: 'low', w: 30, r: 50 },
+    { k: 'loss', n: 'Pérdida de paquetes', u: '%', b: 0.2, z: 0.12, d: 2, dir: 'low', w: 1, r: 3 },
+    { k: 'mos', n: 'MOS promedio de llamadas', u: '', b: 4.32, z: 0.05, d: 2, dir: 'high', w: 4.0, r: 3.6 },
+    { k: 'iot', n: 'Sensores IoT en línea', u: '%', b: 98.7, z: 0.4, d: 1, dir: 'high', w: 97, r: 90 },
+    { k: 'cpu', n: 'CPU del vFirewall (VNF)', u: '%', b: 41, z: 5, d: 0, dir: 'low', w: 70, r: 85 },
+    { k: 'up', n: 'Disponibilidad servicios cloud', u: '%', b: 99.98, z: 0.01, d: 2, dir: 'high', w: 99.95, r: 99.5 },
+    { k: 'waf', n: 'Peticiones bloqueadas por WAF', u: '/min', b: 14, z: 5, d: 0, dir: 'low', w: 80, r: 200 }
+  ];
+  const incidents = [
+    { n: 'Caída del gateway LoRaWAN de la finca El Roble', set: { iot: 84.5 }, a: 'Tráfico de sensores absorbido por el gateway vecino; ticket de campo creado.' },
+    { n: 'Congestión en el enlace de la sucursal Norte', set: { lat: 176, jit: 44, loss: 2.4, mos: 3.72 }, a: 'SD-WAN movió la voz al enlace secundario; la cola EF mantiene la prioridad.' },
+    { n: 'Ataque de bots contra el portal de clientes', set: { waf: 640, cpu: 88 }, a: 'WAF activó limitación de tasa; Splunk correlacionó las IP y notificó al SOC.' }
+  ];
+  const dashGrid = $('#dashGrid'), dashLog = $('#dashLog'), btnInc = $('#btnIncident');
+  let incIdx = 0, active = null;
+  dashGrid.innerHTML = metrics.map(m => '<div class="tile" data-k="' + m.k + '"><div class="tn">' + m.n + '</div><div class="tv"></div><div class="ts"></div></div>').join('');
+  function stateOf(m, v) {
+    if (m.dir === 'low') return v <= m.w ? 'ok' : v <= m.r ? 'warn' : 'bad';
+    return v >= m.w ? 'ok' : v >= m.r ? 'warn' : 'bad';
+  }
+  const stLabel = { ok: '● NORMAL', warn: '● ADVERTENCIA', bad: '● CRÍTICO' };
+  function logLine(cls, txt) {
+    const t = new Date().toLocaleTimeString('es-CO', { hour12: false });
+    const div = document.createElement('div');
+    div.innerHTML = '<span class="t">' + t + '</span><span class="' + cls + '"></span>';
+    div.lastChild.textContent = txt;
+    dashLog.prepend(div);
+    while (dashLog.children.length > 8) dashLog.lastChild.remove();
+  }
+  function tick() {
+    metrics.forEach(m => {
+      let v = active && active.set[m.k] !== undefined ? active.set[m.k] : m.b;
+      v = v + (Math.random() * 2 - 1) * m.z;
+      if (m.u === '%') v = Math.min(v, 100);
+      v = Math.max(v, 0);
+      const st = stateOf(m, v);
+      const tile = dashGrid.querySelector('[data-k="' + m.k + '"]');
+      tile.className = 'tile st-' + st;
+      tile.querySelector('.tv').innerHTML = fmt(v, m.d) + '<small>' + m.u + '</small>';
+      tile.querySelector('.ts').textContent = stLabel[st];
+    });
+  }
+  btnInc.addEventListener('click', () => {
+    active = incidents[incIdx % incidents.length];
+    incIdx++;
+    btnInc.disabled = true;
+    logLine('e', 'ALERTA · ' + active.n);
+    tick();
+    setTimeout(() => logLine('a', 'ACCIÓN · ' + active.a), 2500);
+    setTimeout(() => { active = null; btnInc.disabled = false; logLine('a', 'RECUPERADO · indicadores en verde'); tick(); }, 9000);
+  });
+  logLine('a', 'Sistema de monitoreo iniciado · 8 sensores PRTG activos');
+  tick();
+  setInterval(tick, 2500);
+
+  /* ---------- g. Simulador QoS (Modelo E simplificado) ---------- */
+  const sl = $('#sliderLatency'), sj = $('#sliderJitter'), sp = $('#sliderPacketLoss');
+  function paramChip(name, v, w, r, unit) {
+    const c = v <= w ? 'ok' : v <= r ? 'warn' : 'bad';
+    return '<span class="chip ' + c + '">' + name + ': ' + v + ' ' + unit + '</span>';
+  }
+  function updateQoS() {
+    const lat = parseFloat(sl.value), jit = parseFloat(sj.value), loss = parseFloat(sp.value);
+    $('#valLatency').textContent = lat + ' ms';
+    $('#valJitter').textContent = jit + ' ms';
+    $('#valPacketLoss').textContent = loss + ' %';
+    const eff = lat + 2 * jit + 10;
+    let R = eff < 160 ? 93.2 - eff / 40 : 93.2 - (eff - 120) / 10;
+    R = Math.max(0, Math.min(100, R - loss * 2.5));
+    let mos = 1 + 0.035 * R + 0.000007 * R * (R - 60) * (100 - R);
+    mos = Math.max(1, Math.min(4.5, mos));
+    const level = mos >= 4.0 ? 'g' : mos >= 3.6 ? 'y' : 'r';
+    const info = {
+      g: ['Buena', 'var(--ok)', 'Conversación natural: cumple el objetivo de diseño (MOS ≥ 4,0).'],
+      y: ['Regular', 'var(--warn)', 'Se entiende, pero con molestias. Revisar la cola EF o cambiar de enlace.'],
+      r: ['Mala', 'var(--bad)', 'Llamada inaceptable. SD-WAN debería conmutar de enlace de inmediato.']
+    }[level];
+    $('#mosScore').textContent = mos.toFixed(2);
+    $('#mosScore').style.color = info[1];
+    $('#mosStatus').textContent = info[0];
+    $('#mosStatus').style.color = info[1];
+    $('#mosStatus').style.background = 'var(--soft-2)';
+    $('#mosHint').textContent = info[2];
+    ['r', 'y', 'g'].forEach(c => document.getElementById('tl' + c.toUpperCase()).classList.toggle('on', c === level));
+    $('#paramStatus').innerHTML = paramChip('Latencia', lat, 150, 300, 'ms') + paramChip('Jitter', jit, 30, 50, 'ms') + paramChip('Pérdida', loss, 1, 3, '%');
+  }
+  [sl, sj, sp].forEach(i => i.addEventListener('input', updateQoS));
+  updateQoS();
+
+  /* ---------- g. Calculadora de throughput ---------- */
+  function updateBW() {
+    const rate = parseFloat($('#codec').value);
+    const calls = Math.max(1, Math.min(500, parseInt($('#calls').value, 10) || 1));
+    const link = parseFloat($('#link').value);
+    const mbps = calls * rate / 1000;
+    const pct = mbps / link * 100;
+    const c = pct <= 33 ? 'ok' : pct <= 60 ? 'warn' : 'bad';
+    $('#bwOut').textContent = fmt(mbps, 2) + ' Mbps';
+    $('#bwBar').style.width = Math.min(100, pct) + '%';
+    $('#bwBar').style.background = 'var(--' + c + ')';
+    $('#bwMsg').innerHTML = '<span class="chip ' + c + '">' + fmt(pct, 1) + ' % del enlace</span> ' +
+      (c === 'ok' ? 'Dentro de la reserva LLQ.' : c === 'warn' ? 'Supera el 33 %: considere G.729 o más ancho de banda.' : 'Enlace insuficiente para la voz.');
+  }
+  ['codec', 'calls', 'link'].forEach(id => document.getElementById(id).addEventListener('input', updateBW));
+  updateBW();
+
+  /* ---------- h. Tarjetas y lista de verificación ---------- */
+  $$('.flip-card').forEach(c => c.addEventListener('click', () => c.classList.toggle('flipped')));
+  const checks = $$('#checklist input');
+  function updateChecks() {
+    const n = checks.filter(c => c.checked).length;
+    $('#checkCount').textContent = n + '/' + checks.length;
+    const bar = $('#checkBar');
+    bar.style.width = (n / checks.length * 100) + '%';
+    bar.style.background = n === checks.length ? 'var(--ok)' : n >= 6 ? 'var(--warn)' : 'var(--bad)';
+  }
+  checks.forEach(c => c.addEventListener('change', updateChecks));
+  updateChecks();
+
+  /* ---------- j. Filtro de la tabla comparativa ---------- */
+  $$('[data-filter]').forEach(btn => btn.addEventListener('click', () => {
+    $$('[data-filter]').forEach(b => b.classList.toggle('active', b === btn));
+    $$('#compTable tbody tr').forEach(row => {
+      row.style.display = btn.dataset.filter === 'all' || row.dataset.cat === btn.dataset.filter ? '' : 'none';
+    });
+  }));
+
+  /* ---------- ★ Mini-quiz ---------- */
+  const quiz = [
+    ['¿Qué separa una red SDN?', ['Los cables de cobre de la fibra óptica', 'El plano de control del plano de datos', 'La voz de los datos en VLAN distintas'], 1, 'SDN centraliza las decisiones (control) y deja a los switches solo el reenvío (datos).'],
+    ['¿Por qué se eligió LoRaWAN privada para los cultivos lejanos?', ['Porque ofrece más ancho de banda para video', 'Porque tiene largo alcance, bajo consumo y no depende de un operador', 'Porque usa espectro licenciado 5G'], 1, 'En zonas rurales sin cobertura celular, la empresa instala sus propios gateways.'],
+    ['¿Cuál es la latencia máxima recomendada en un sentido para voz (ITU-T G.114)?', ['20 ms', '150 ms', '1000 ms'], 1, 'Por encima de 150 ms los interlocutores empiezan a interrumpirse.'],
+    ['¿Qué protege un WAF?', ['Aplicaciones web contra ataques de capa 7 como inyección SQL o XSS', 'Los sensores contra interferencias de radio', 'Los enlaces contra el jitter'], 0, 'El WAF inspecciona las peticiones HTTP antes de que lleguen a la aplicación.'],
+    ['¿Qué principio aplica RBAC?', ['Todos los usuarios son administradores', 'Contraseñas compartidas por área', 'Permisos asignados por rol con mínimo privilegio'], 2, 'Cada rol recibe solo los permisos que necesita para su trabajo.']
+  ];
+  const quizBox = $('#quiz');
+  let score = 0, answered = 0;
+  quizBox.innerHTML = quiz.map((q, i) =>
+    '<div class="quiz-q"><p>' + (i + 1) + '. ' + q[0] + '</p>' +
+    q[1].map((o, j) => '<button class="quiz-option" data-q="' + i + '" data-o="' + j + '">' + String.fromCharCode(65 + j) + '. ' + o + '</button>').join('') +
+    '<div class="quiz-feedback" aria-live="polite"></div></div>').join('') +
+    '<div class="quiz-score"><span>Puntaje</span><span class="big" id="quizScore">0/' + quiz.length + '</span><button class="filter-btn" id="quizReset">Reintentar</button></div>';
+  quizBox.addEventListener('click', e => {
+    const btn = e.target.closest('.quiz-option');
+    if (!btn || btn.disabled) return;
+    const q = quiz[+btn.dataset.q], ok = +btn.dataset.o === q[2];
+    const group = btn.parentElement, fb = group.querySelector('.quiz-feedback');
+    group.querySelectorAll('.quiz-option').forEach((b, j) => { b.disabled = true; if (j === q[2]) b.classList.add('correct'); });
+    if (!ok) btn.classList.add('incorrect');
+    fb.style.display = 'block';
+    fb.style.background = ok ? '#34D3991F' : '#F871711F';
+    fb.style.color = ok ? 'var(--ok)' : 'var(--bad)';
+    fb.textContent = (ok ? '¡Correcto! ' : 'Incorrecto. ') + q[3];
+    answered++; if (ok) score++;
+    $('#quizScore').textContent = score + '/' + quiz.length + (answered === quiz.length ? (score === quiz.length ? ' 🏆' : '') : '');
+  });
+  quizBox.addEventListener('click', e => {
+    if (e.target.id !== 'quizReset') return;
+    score = 0; answered = 0;
+    $$('.quiz-option', quizBox).forEach(b => { b.disabled = false; b.classList.remove('correct', 'incorrect'); });
+    $$('.quiz-feedback', quizBox).forEach(f => { f.style.display = 'none'; });
+    $('#quizScore').textContent = '0/' + quiz.length;
+  });
+</script>
+</body>
+</html>
